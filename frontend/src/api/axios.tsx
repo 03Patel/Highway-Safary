@@ -2,8 +2,8 @@ import axios from "axios";
 
 const baseURL =
   window.location.hostname === "localhost"
-    ? "https://highwaysafarybackend.onrender.com/api"
-    : "";
+    ? "http://localhost:5000/api"
+    : "https://highwaysafarybackend.onrender.com/api";
 
 
 const API = axios.create({
