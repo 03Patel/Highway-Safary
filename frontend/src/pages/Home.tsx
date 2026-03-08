@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import { AuthContext } from "../reducers/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-type Experience = {
+type Experiences = {
   _id: string;
   title: string;
   location: string;
@@ -18,8 +18,8 @@ function Home() {
 
   const { state } = useContext(AuthContext);
 
-  const [list, setList] = useState<Experience[]>([]);
-  const [filtered, setFiltered] = useState<Experience[]>([]);
+  const [list, setList] = useState<Experiences[]>([]);
+  const [filtered, setFiltered] = useState<Experiences[]>([]);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
