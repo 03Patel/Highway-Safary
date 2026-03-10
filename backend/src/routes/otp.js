@@ -55,8 +55,5 @@ router.post("/verify-otp", (req, res) => {
 
 });
 
-<<<<<<< HEAD
-=======
 
->>>>>>> a637c2c391be7b10037a0516c7fcf9b8f03992ed
 module.exports = router;
