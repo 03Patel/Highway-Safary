@@ -19,12 +19,6 @@ function Booking() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoApplied, setPromoApplied] = useState(false);
 
-  // OTP STATES
-  const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [otpLoading, setOtpLoading] = useState(false);
-
   if (!experience || !booking) {
     return (
       <div className="text-center py-20">
@@ -36,63 +30,6 @@ function Booking() {
   const subtotal = experience.price * booking.quantity;
   const tax = 59;
   const total = subtotal + tax - discount;
-
-  // SEND OTP
-  const handleSendOtp = async () => {
-
-    if (!email) {
-      alert("Enter email first");
-      return;
-    }
-
-    try {
-
-      setOtpLoading(true);
-
-      const res = await API.post("/otp/send-otp", { email });
-
-      if (res.data.success) {
-        setOtpSent(true);
-        alert("OTP sent to your email");
-      }
-
-    } catch (err) {
-
-      alert("Failed to send OTP");
-
-    } finally {
-
-      setOtpLoading(false);
-
-    }
-  };
-
-  // VERIFY OTP
-  const handleVerifyOtp = async () => {
-
-    if (!otp) {
-      alert("Enter OTP");
-      return;
-    }
-
-    try {
-
-      const res = await API.post("/otp/verify-otp", {
-        email,
-        otp
-      });
-
-      if (res.data.success) {
-        setOtpVerified(true);
-        alert("Email verified successfully");
-      }
-
-    } catch (err) {
-
-      alert("Invalid OTP");
-
-    }
-  };
 
   // APPLY PROMO
   const handleApplyPromo = async () => {
@@ -133,11 +70,6 @@ function Booking() {
   // BOOK EXPERIENCE
   const handleBooking = async () => {
 
-    if (!otpVerified) {
-      alert("Please verify your email first");
-      return;
-    }
-
     if (!name || !email || !agree) {
       alert("Please fill all fields and agree to terms");
       return;
@@ -166,7 +98,6 @@ function Booking() {
         status: "pending"
 
       });
-      console.log(res.data)
 
       if (res.data.success) {
 
@@ -210,56 +141,15 @@ function Booking() {
             onChange={(e) => setName(e.target.value)}
           />
 
-          {/* EMAIL WITH VERIFY BUTTON */}
-
-          <div className="flex gap-2">
-
-            <input
-              type="email"
-              placeholder="Email"
-              className="border rounded-md px-3 py-2 text-sm flex-1"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={otpVerified}
-            />
-
-            {!otpVerified && (
-              <button
-                onClick={handleSendOtp}
-                className="bg-blue-600 text-white px-3 rounded-md text-sm"
-              >
-                {otpLoading ? "Sending..." : "Verify"}
-              </button>
-            )}
-
-          </div>
+          <input
+            type="email"
+            placeholder="Email"
+            className="border rounded-md px-3 py-2 text-sm"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
         </div>
-
-        {/* OTP FIELD */}
-
-        {otpSent && !otpVerified && (
-
-          <div className="flex gap-2 mb-4">
-
-            <input
-              type="text"
-              placeholder="Enter OTP"
-              className="border rounded-md px-3 py-2 text-sm flex-1"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-            />
-
-            <button
-              onClick={handleVerifyOtp}
-              className="bg-green-600 text-white px-3 rounded-md text-sm"
-            >
-              Verify OTP
-            </button>
-
-          </div>
-
-        )}
 
         {/* PROMO */}
 
