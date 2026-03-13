@@ -49,7 +49,8 @@ const Login: React.FC = () => {
                     id: admin.id,
                     email: admin.email,
                     role: admin.role,
-                },
+                    token: token
+                }
             });
 
             navigate("/");
