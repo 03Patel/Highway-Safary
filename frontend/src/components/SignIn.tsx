@@ -25,7 +25,7 @@ function SignIn() {
             localStorage.setItem("role", user.role)
             localStorage.setItem("email", user.email);
             localStorage.setItem("userId", user.userId)
-            console.log(user.userId)
+            
             // Update context
             dispatch({
                 type: "LOGIN",
