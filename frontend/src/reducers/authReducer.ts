@@ -1,11 +1,16 @@
 export interface AuthState {
   isAuthenticated: boolean;
-  user: { id: string; email: string; role: "user" | "admin" } | null;
+  user: { userId: string; email: string; role: "user" | "admin" } | null;
 }
 
 export interface LoginAction {
   type: "LOGIN";
-  payload: { id: string; email: string; role: "user" | "admin"; token?: string };
+  payload: {
+    userId: string;
+    email: string;
+    role: "user" | "admin";
+    token: string;
+  };
 }
 
 export interface LogoutAction {
@@ -14,14 +19,15 @@ export interface LogoutAction {
 
 export type AuthAction = LoginAction | LogoutAction;
 
-// Initialize from localStorage if page reloads
+// Initialize from localStorage
 export const initialState: AuthState = {
   isAuthenticated: !!localStorage.getItem("token"),
-  user: localStorage.getItem("role")
+  user: localStorage.getItem("userId")
     ? {
-      id: localStorage.getItem("userId") || "",
+      userId: localStorage.getItem("userId") || "",
       email: localStorage.getItem("email") || "",
-      role: localStorage.getItem("role") === "admin" ? "admin" : "user",
+      role:
+        localStorage.getItem("role") === "admin" ? "admin" : "user",
     }
     : null,
 };
@@ -32,22 +38,27 @@ export const authReducer = (
 ): AuthState => {
   switch (action.type) {
     case "LOGIN":
-      if (action.payload.token) {
-        localStorage.setItem("token", action.payload.token);
-      }
+      localStorage.setItem("token", action.payload.token);
       localStorage.setItem("role", action.payload.role);
       localStorage.setItem("email", action.payload.email);
-      localStorage.setItem("userId", action.payload.id);
-      return { 
-        ...state, 
-        isAuthenticated: true, 
-        user: { id: action.payload.id, email: action.payload.email, role: action.payload.role } 
+      localStorage.setItem("userId", action.payload.userId);
+
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: {
+          userId: action.payload.userId,
+          email: action.payload.email,
+          role: action.payload.role,
+        },
       };
 
     case "LOGOUT":
       localStorage.removeItem("token");
       localStorage.removeItem("role");
       localStorage.removeItem("email");
+      localStorage.removeItem("userId");
+
       return { ...state, isAuthenticated: false, user: null };
 
     default:

@@ -1,20 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
 import API from "../api/axios";
 import Card from "../components/Card";
-import Navbar from "../components/Navbar";
 import { AuthContext } from "../reducers/AuthContext";
 import { useNavigate } from "react-router-dom";
-
-
-
-type Experience= {
-  _id: string;
-  title: string;
-  location: string;
-  image?: string;
-  description?: string;
-  price?: number;
-};
+import { Experience } from "../types";
+import { Plus } from "lucide-react";
 
 function Home() {
 
@@ -30,18 +20,14 @@ function Home() {
 
   const fetchData = async () => {
     try {
-
       const res = await API.get("/experiences");
 
       setList(res.data);
       setFiltered(res.data);
 
     } catch (err) {
-
       console.error("Error fetching:", err);
-
     } finally {
-
       setLoading(false);
 
     }
@@ -62,44 +48,71 @@ function Home() {
 
   return (
     <>
-      <Navbar  />
 
-      <div className="p-6 max-w-6xl mx-auto">
 
-        <h1 className="text-2xl font-semibold mb-4">Experiences</h1>
 
-        {loading ? (
-          <p className="text-center">Loading...</p>
-        ) : filtered.length > 0 ? (
+      {/* Content */}
+      <div className="bg-gray-100 min-h-screen py-10 px-6">
 
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="max-w-6xl mx-auto">
 
-            {filtered.map((x) => (
-              <Card
-                key={x._id}
-                experience={x}
-                onDelete={handleDelete}
-              />
-            ))}
-
-            {/* ADMIN ADD BUTTON */}
-            {state.isAuthenticated && role === "admin" && (
-              <button
-                onClick={() => navigate("/AddItem")}
-                className="flex items-center justify-center text-4xl font-bold border-2 border-dashed border-gray-400 rounded-xl hover:bg-gray-100 transition"
-              >
-                +
-              </button>
-            )}
-
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-700">
+              Available Experiences
+            </h2>
           </div>
 
-        ) : (
-          <p className="text-gray-500 text-center mt-10">
-            No experiences found
-          </p>
-        )}
+          {loading ? (
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-60 bg-white rounded-xl shadow animate-pulse"
+                ></div>
+              ))}
+            </div>
+          ) : filtered.length > 0 ? (
 
+            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+
+              {filtered.map((x) => (
+                <Card
+                  key={x._id}
+                  experience={x}
+                  onDelete={handleDelete}
+                />
+              ))}
+
+              {/* Admin Add Experience Card */}
+              {state.isAuthenticated && role === "admin" && (
+                <div
+                  onClick={() => navigate("/AddItem")}
+                  className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl h-60 cursor-pointer hover:bg-white hover:shadow-md transition"
+                >
+                  <Plus size={40} className="text-indigo-500 mb-2" />
+                  <p className="text-gray-600 font-medium">
+                    Add Experience
+                  </p>
+                </div>
+              )}
+
+            </div>
+
+          ) : (
+            <div className="text-center mt-16">
+
+              <h3 className="text-xl font-semibold text-gray-600">
+                No experiences found
+              </h3>
+
+              <p className="text-gray-400 mt-2">
+                Try searching with different keywords
+              </p>
+
+            </div>
+          )}
+
+        </div>
       </div>
     </>
   );

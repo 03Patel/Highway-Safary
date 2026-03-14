@@ -12,11 +12,13 @@ import AdminPage from "./pages/AdminPage"
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import MyBookings from "./pages/MyBooking";
+import Navbar from "./components/Navbar";
+
 
 function App() {
   return (
     <BrowserRouter>
-
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/details/:id" element={<Details />} />

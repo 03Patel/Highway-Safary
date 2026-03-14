@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../reducers/AuthContext";
 import { LogOut, Menu, X } from "lucide-react";
 
@@ -12,11 +12,12 @@ function Navbar() {
   const userId = localStorage.getItem("userId");
 
 
-
+  const naviagte = useNavigate()
   const logout = () => {
     dispatch({ type: "LOGOUT" });
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    naviagte("/")
   };
 
   return (
@@ -61,6 +62,7 @@ function Navbar() {
               </Link>
 
               <button
+
                 onClick={logout}
                 className="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 hover:text-white"
               >
