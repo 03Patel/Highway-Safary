@@ -1,1 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,500&display=swap');
+
+
 @import 'tailwindcss';
+@plugin "daisyui";
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #111;
+        color: white;
+    }
+}
+
+@keyframes walkForward {
+    0% {
+        transform: translateX(-20px) translateY(0px);
+    }
+
+    25% {
+        transform: translateX(-10px) translateY(-8px);
+    }
+
+    50% {
+        transform: translateX(0px) translateY(0px);
+    }
+
+    75% {
+        transform: translateX(10px) translateY(-8px);
+    }
+
+    100% {
+        transform: translateX(20px) translateY(0px);
+    }
+}
+
+.animate-walk {
+    animation: walkForward 4s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 5s ease-in-out infinite;
+}

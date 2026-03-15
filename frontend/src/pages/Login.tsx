@@ -46,7 +46,7 @@ const Login: React.FC = () => {
             dispatch({
                 type: "LOGIN",
                 payload: {
-                    id: admin.id,
+                    userId: admin.id,
                     email: admin.email,
                     role: admin.role,
                     token: token

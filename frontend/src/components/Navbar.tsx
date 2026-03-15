@@ -1,175 +1,158 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../reducers/AuthContext";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { div } from "framer-motion/client";
 
 function Navbar() {
-
-  const [open, setOpen] = useState(false);
   const { state, dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const role = localStorage.getItem("role");
-  const userId = localStorage.getItem("userId");
 
-
-  const naviagte = useNavigate()
   const logout = () => {
     dispatch({ type: "LOGOUT" });
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    naviagte("/")
+    navigate("/");
   };
+  const navItems = (
+    <>
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/about">About Us</Link></li>
+      <li><Link to="destination">Destinations</Link></li>
+      <li><Link to="blog">Blog</Link></li>
+      <li><Link to="contact">Contact</Link></li>
+    </>
+  )
+
+  const [sticky, setSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setSticky(true);
+      } else {
+        setSticky(false);
+      }
+    }
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+
+  }, [])
+
+
 
   return (
-    <nav className="w-full bg-white border-b shadow-sm">
+    <div className={` max-w-screen-2xl containter mx-auto bg-white text-black sticky top-0 left-0 right-0 z-50
+     ${sticky ? "sticky-navbar shadow-md bg-base-200 duration-300 transition-all ease-in-out" : ""}
+    `}>
+      <div className="navbar md:px-20 px-4  ">
 
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        {/* LEFT */}
+        <div className="navbar-start">
 
-        <Link to="/" className="text-lg font-semibold">Highway Safary</Link>
-
-        <div className="hidden md:flex items-center gap-4">
-
-          {/* USER NAVBAR */}
-          {state.isAuthenticated && role === "user" && (
-            <>
-              <Link
-                to="/mybookings"
-                className="px-4 py-2 bg-white-400 border-2 rounded text-sm font-semibold hover:bg-black hover:text-white"
+          {/* MOBILE MENU */}
+          <div className="dropdown ">
+            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                My Bookings
-              </Link>
-
-              <button
-                onClick={logout}
-                className="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 hover:text-white"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
-            </>
-          )}
-
-          {/* ADMIN NAVBAR */}
-          {state.isAuthenticated && role === "admin" && (
-            <>
-
-
-              <Link
-                to="/bookingdetails"
-                className="px-4 py-2 bg-white-400 border-2 rounded text-sm font-semibold hover:bg-black hover:text-white"
-              >
-                Bookings
-              </Link>
-
-              <button
-
-                onClick={logout}
-                className="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 hover:text-white"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
-            </>
-          )}
-
-          {/* GUEST NAVBAR */}
-          {!state.isAuthenticated && (
-            <>
-              <Link
-                to="/signin"
-                className="px-4 py-2 bg-white-400 border-2 rounded text-sm font-semibold hover:bg-black hover:text-white"
-              >
-                Sign In
-              </Link>
-
-              <Link
-                to="/signup"
-                className="px-4 py-2 bg-gray-800 text-white  rounded text-sm  hover:bg-white hover:text-black hover:border-2 hover:font-semibold"
-              >
-                Sign Up
-              </Link>
-
-            </>
-          )}
-
-        </div>
-        {/* MOBILE SIDEBAR */}
-
-
-        <div className="relative md:hidden">
-
-          {/* TOP BAR */}
-
-          <div className="bg-[#333] text-white flex justify-end px-4 py-3 h-10">
-            <button onClick={() => setOpen(!open)}>
-              {!open ? <Menu size={20} /> : ""}
-
-            </button>
-          </div>
-
-
-          <div
-            className={`fixed top-0 right-0 h-full w-[30%] bg-[#333] text-white z-50
-                         transform transition-transform duration-300
-                    ${open ? "translate-x-0" : "translate-x-full"}`}
-
-          >
-            <div className="bg-[#333] text-white flex justify-end px-4 py-3">
-              <button onClick={() => setOpen(!open)}>
-                {open ? <X size={24} /> : ""}
-
-              </button>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h8m-8 6h16"
+                />
+              </svg>
             </div>
 
-            <div className="flex flex-col mt-14   gap-2">
-              {!state.isAuthenticated && (
-                <>
-                  <Link
-                    to="/signup"
-                    className="px-4 py-2 bg-gray-800 text-white  item-center rounded text-sm  hover:bg-white hover:text-black hover:border-2 hover:font-semibold w-50%"
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-64 p-4 shadow-xl border "
 
-                  >
-                    Sign UP
-                  </Link>
+            >
 
-                  <Link
-                    to="/signin"
-                    className="px-4 py-2 bg-white-400 border-2 rounded text-sm font-semibold hover:bg-black hover:text-white"
+              {navItems}
 
-                  >
-                    Sign In
-                  </Link>
-                </>
-              )}
               {state.isAuthenticated && role === "user" && (
                 <>
-                  <Link
-                    to="/mybookings"
-                    className="px-4 py-2 bg-white-400 border-2 rounded text-sm font-semibold hover:bg-black hover:text-white"
-                  >
-                    My Bookings
-                  </Link>
+                  <li><Link to="/mybookings">My Bookings</Link></li>
 
-                  <button
-                    onClick={logout}
-                    className="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 hover:text-white"
-                  >
-                    <LogOut size={16} />
-                    Logout
-                  </button>
+                </>
+              )}
+
+              {state.isAuthenticated && role === "admin" && (
+                <>
+                  <li><Link to="/bookingdetails">Bookings</Link></li>
+
                 </>
               )}
 
 
-
-            </div>
+            </ul>
           </div>
 
+          {/* LOGO */}
+          <Link
+            to="/"
+            className="md:text-3xl font-extrabold bg-gradient-to-r from-primary via-orange-500 to-pink-500 bg-clip-text text-transparent hover:scale-105 transition duration-300"
+          >
+            Highway Safary
+          </Link>
         </div>
 
-      </div>
+        <div className="navbar-end">
+          {/* CENTER MENU (DESKTOP) */}
+          <div className=" hidden lg:flex ">
 
-    </nav >
+            <ul className="menu menu-horizontal px-1">
+              {navItems}
+              {state.isAuthenticated && role === "user" && (
+                <>
+                  <li><Link to="/mybookings">My Bookings</Link></li>
+                </>
+              )}
+
+              {state.isAuthenticated && role === "admin" && (
+                <>
+                  <li><Link to="/bookingdetails">Bookings</Link></li>
+                </>
+              )}
+
+            </ul>
+          </div>
+
+
+          {state.isAuthenticated ? (
+            <button
+              onClick={logout}
+              className=" bg-red-500 text-white p-2 rounded-md cursor-pointer hover:bg-red-700 duration-300"
+            >
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/signin")}
+              className=" bg-black text-white p-2 rounded-md cursor-pointer hover:bg-slate-800 duration-300"
+            >
+              Login
+            </button>
+          )
+          }
+        </div>
+
+
+
+
+      </div>
+    </div>
   );
 }
 

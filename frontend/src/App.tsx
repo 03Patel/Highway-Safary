@@ -13,14 +13,15 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import MyBookings from "./pages/MyBooking";
 import Navbar from "./components/Navbar";
-
+import Banner from "./components/Banner"
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Banner />} />
+        <Route path="/destination" element={<Home />} />
         <Route path="/details/:id" element={<Details />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/checkout" element={<Checkout />} />
