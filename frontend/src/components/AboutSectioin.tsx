@@ -13,7 +13,7 @@ export default function AboutSection() {
 
                     {/* Background Image */}
                     <img
-                        src={background}
+                        src="../assets/background2.jpg"
                         alt="Background"
                         className="absolute top-0 left-0 w-[400%]  object-cover object-left   duration-700 hover:scale-110"
                     />
