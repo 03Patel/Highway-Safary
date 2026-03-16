@@ -1,5 +1,5 @@
 import hero from "../assets/image3.jpg"
-import background from "../assets/background2.jpg"
+
 import gi from "../assets/Untitled.png"
 
 
