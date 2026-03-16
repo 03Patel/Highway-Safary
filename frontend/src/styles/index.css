@@ -60,3 +60,19 @@ body {
 .animate-float {
     animation: float 5s ease-in-out infinite;
 }
+
+@keyframes revealHeading {
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal-heading {
+    animation: revealHeading 0.8s ease-out forwards;
+}

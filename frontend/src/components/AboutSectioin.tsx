@@ -1,4 +1,7 @@
-//import hero from "../assets/travel-hero.png"; // your illustration
+import hero from "../assets/image3.jpg"
+import background from "../assets/background2.jpg"
+import gi from "../assets/Untitled.png"
+
 
 export default function AboutSection() {
     return (
@@ -6,49 +9,61 @@ export default function AboutSection() {
             <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
 
                 {/* Left Image */}
-                <div className="w-full md:w-1/2 flex justify-center">
+                <div className="w-full md:w-1/2 flex justify-start items-center relative px-4 sm:px-6 overflow-hidden rounded-2xl h-72 sm:h-96">
+
+                    {/* Background Image */}
                     <img
-                        // src={hero}
-                        alt="Traveler"
-                        className="w-[420px] md:w-[520px] animate-float drop-shadow-2xl"
+                        src={background}
+                        alt="Background"
+                        className="absolute top-0 left-0 w-[400%]  object-cover object-left   duration-700 hover:scale-110"
                     />
+
+                    {/* Foreground Image */}
+                    <img
+                        src={gi}
+                        alt="Foreground"
+                        className="absolute top-0 left-0 w-[400%] h-full object-cover object-left animate-float"
+                    />
+
                 </div>
 
                 {/* Right Content */}
-                <div className="w-full md:w-1/2 space-y-6">
+                <div className="w-full md:w-1/2 order-1 md:order-2space-y-6">
 
                     <p className="text-primary italic text-lg">
                         About Highway Safary
                     </p>
-
-                    <h1 className="text-5xl font-bold leading-tight text-black">
+                    <br />
+                    <h1 className="text-2xl md:text-5xl font-bold leading-tight text-black ">
                         World Best <span className="text-primary">Travel</span> Agency
                     </h1>
-
-                    <p className="text-gray-600">
+                    <br />
+                    <br />
+                    <p className="text-md md:text-lg text-gray-700">
                         Since 2025, we’ve been helping travelers explore breathtaking destinations. From day trips to longer vacations, we make sure every journey is enjoyable and unforgettable.
                     </p>
-
+                    <br />
                     {/* Features */}
                     <div className="space-y-3">
                         <div className="flex items-center gap-3">
                             <div className="w-6 h-6 bg-primary text-white flex items-center justify-center rounded-full">✓</div>
-                            <p className="text-black">Best travel destinations</p>
+                            <p className="text-black text-sm md:text-base">Best travel destinations</p>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="w-6 h-6 bg-primary text-white flex items-center justify-center rounded-full">✓</div>
-                            <p className="text-black">Affordable packages</p>
+                            <p className="text-black text-sm md:text-base">Affordable packages</p>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="w-6 h-6 bg-primary text-white flex items-center justify-center rounded-full">✓</div>
-                            <p className="text-black">24/7 travel support</p>
+                            <p className="text-black text-sm md:text-base">24/7 travel support</p>
                         </div>
                     </div>
 
                 </div>
             </div>
+
         </section>
     );
 }
