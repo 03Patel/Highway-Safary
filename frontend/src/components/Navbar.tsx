@@ -46,7 +46,7 @@ function Navbar() {
 
 
   return (
-    <div className={` max-w-screen-2xl containter mx-auto bg-white text-black sticky top-0 left-0 right-0 z-50
+    <div className={` max-w-screen-2xl containter mx-auto bg-white text-black sticky top-0 left-0 right-0 z-150
      ${sticky ? "sticky-navbar shadow-md bg-base-200 duration-300 transition-all ease-in-out" : ""}
     `}>
       <div className="navbar md:px-20 px-4  ">

@@ -7,7 +7,8 @@ const otpRoutes = require("./routes/otp");
 const experiencesRoute = require("./routes/experiences");
 const bookingsRoute = require("./routes/bookings");
 const promoRoute = require("./routes/promo");
-
+const TourRoutes = require("./routes/tours");
+const Tour = require("./models/Tour");
 
 const app = express(); // must come first
 
@@ -16,6 +17,8 @@ app.use(express.json());
 
 /* Routes */
 
+
+app.use("/api/tours", TourRoutes)
 app.use("/api/otp", otpRoutes);
 app.use("/api/experiences", experiencesRoute);
 app.use("/api/bookings", bookingsRoute);
