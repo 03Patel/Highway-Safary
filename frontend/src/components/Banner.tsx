@@ -51,7 +51,7 @@ function Banner() {
                 </div>
 
                 {/* RIGHT CONTENT */}
-                <div className="w-full mt-[-50px] md:mt-[-30px] order-2 md:w-1/2 flex justify-center items-center overflow-hidden">
+                <div className="w-full mt-[-40px] md:mt-[-30px] order-2 md:w-1/2 flex justify-center items-center overflow-hidden">
                     <TravelHero />
                 </div>
 

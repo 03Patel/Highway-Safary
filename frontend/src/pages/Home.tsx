@@ -5,12 +5,16 @@ import { AuthContext } from "../reducers/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Experience } from "../types";
 import { Plus } from "lucide-react";
+import Heading from "../components/Heading";
+
 
 function Home() {
 
   const { state } = useContext(AuthContext);
 
   const [list, setList] = useState<Experience[]>([]);
+
+
   const [filtered, setFiltered] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,8 +37,12 @@ function Home() {
     }
   };
 
+
+
+
   useEffect(() => {
     fetchData();
+
   }, []);
 
   const handleDelete = (id: string) => {
@@ -52,11 +60,11 @@ function Home() {
 
 
       {/* Content */}
-      <div className="bg-gray-100 min-h-screen py-10 px-6">
+      <div className="bg-gray-100 min-h-screen py-10 ">
+        <Heading />
+        <div className="max-w-6xl mx-auto px-6">
 
-        <div className="max-w-6xl mx-auto">
-
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-8 a">
             <h2 className="text-2xl font-bold text-gray-700">
               Available Experiences
             </h2>
@@ -82,6 +90,8 @@ function Home() {
                   onDelete={handleDelete}
                 />
               ))}
+
+
 
               {/* Admin Add Experience Card */}
               {state.isAuthenticated && role === "admin" && (
@@ -114,6 +124,7 @@ function Home() {
 
         </div>
       </div>
+
     </>
   );
 }

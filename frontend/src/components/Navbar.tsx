@@ -19,7 +19,7 @@ function Navbar() {
   const navItems = (
     <>
       <li><Link to="/">Home</Link></li>
-      <li><Link to="/about">About Us</Link></li>
+      <li><Link to="/aboutus">About Us</Link></li>
       <li><Link to="destination">Destinations</Link></li>
       <li><Link to="blog">Blog</Link></li>
       <li><Link to="contact">Contact</Link></li>

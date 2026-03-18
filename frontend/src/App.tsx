@@ -14,6 +14,9 @@ import SignUp from "./components/SignUp";
 import MyBookings from "./pages/MyBooking";
 import Navbar from "./components/Navbar";
 import Banner from "./components/Banner"
+import AboutUs from "./components/AboutUs";
+import Blog from "./components/Blog";
+import { Contact } from "lucide-react";
 
 function App() {
   return (
@@ -32,6 +35,9 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/mybookings" element={<MyBookings />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </BrowserRouter>
   );

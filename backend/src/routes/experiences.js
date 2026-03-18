@@ -136,10 +136,11 @@ router.post("/signin", async (req, res) => {
     try {
 
         const { email, password } = req.body;
-
+        console.log(req.body)
         const user = await User.findOne({ email });
+        console.log(user)
 
-        if (!user || user.role !== "user") {
+        if (!user) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
