@@ -52,7 +52,7 @@ function Card({ experience, onDelete }: Props) {
           className="w-full h-52 "
         />
 
-        <span className="absolute top-3 right-3 bg-white text-sm font-medium px-3 py-1 rounded-full shadow">
+        <span className="absolute top-3 right-3 bg-blue-500 text-sm font-medium px-3 py-1 rounded-full shadow">
           ₹{experience.price}
         </span>
       </div>

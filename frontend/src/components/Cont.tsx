@@ -27,99 +27,100 @@ const Cont: React.FC = () => {
 
     return (
         <div >
-            <Heading />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+            <Heading h=" Get in Touch" p=" Have questions or need help planning your journey? Our team is here to guide you every step of the way." />
 
-                <h1 className="text-3xl md:text-5xl font-bold mb-4">
-                    Get in Touch
-                </h1>
-
-                <p className="max-w-2xl text-sm md:text-lg mb-6">
-                    Have questions or need help planning your journey? Our team is here to guide you every step of the way.
-                </p>
-
-            </div>
-            <div className="bg-white  px-20">
+            <div className="bg-white  md:px-20 px-6">
 
                 {/* Heading */}
                 <div className="text-center py-16 ">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+                    <h1 className="text-3xl md:text-5xl font-bold text-gray-900">
                         How Can We Help You ?
                     </h1>
                     <p className="text-gray-600 mt-3 text-sm md:text-base">
                         Have questions or need help planning your trip? We’re here for you.
                     </p>
                 </div>
-                <div className=" bg-blue-50 w-[80%] mx-auto px-20 py-10">
+                <div className="bg-blue-50 w-full md:w-[80%] md:mx-auto px-3 sm:px-5 md:px-16 py-6 md:py-10 ">
 
                     <form
                         onSubmit={handleSubmit}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8"
+                        className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
                     >
+
                         {/* Name */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 font-medium">Your Name *</label>
+                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                                Your Name *
+                            </label>
                             <input
                                 type="text"
                                 name="name"
                                 value={form.name}
                                 onChange={handleChange}
                                 placeholder="Enter your name"
-                                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black transition"
+                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
                                 required
                             />
                         </div>
 
                         {/* Email */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 font-medium">Your Email *</label>
+                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                                Your Email *
+                            </label>
                             <input
                                 type="email"
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
                                 placeholder="Enter your email"
-                                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none  text-black  transition"
+                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
                                 required
                             />
                         </div>
 
                         {/* Phone */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 font-medium">Phone</label>
+                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                                Phone
+                            </label>
                             <input
                                 type="text"
                                 name="phone"
                                 value={form.phone}
                                 onChange={handleChange}
                                 placeholder="Enter phone number"
-                                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none  text-black  transition"
+                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
                             />
                         </div>
 
                         {/* Subject */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 font-medium">Subject</label>
+                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                                Subject
+                            </label>
                             <input
                                 type="text"
                                 name="subject"
                                 value={form.subject}
                                 onChange={handleChange}
                                 placeholder="Enter subject"
-                                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none  text-black  transition"
+                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
                             />
                         </div>
 
                         {/* Message */}
                         <div className="md:col-span-2 flex flex-col">
-                            <label className="text-gray-700 mb-1 font-medium">Your Message *</label>
+                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                                Your Message *
+                            </label>
                             <textarea
                                 name="message"
                                 value={form.message}
                                 onChange={handleChange}
                                 placeholder="Write your message..."
-                                rows="5"
-                                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none  text-black  transition resize-none"
+                                rows={4}
+                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black resize-none"
                                 required
                             />
                         </div>
@@ -127,20 +128,20 @@ const Cont: React.FC = () => {
                         {/* Button */}
                         <button
                             type="submit"
-                            className="md:col-span-2 w-full bg-indigo-500 text-white py-3 rounded-lg font-semibold hover:bg-indigo-600 transition duration-300 shadow-md hover:shadow-lg"
+                            className="md:col-span-2 w-full bg-indigo-500 text-white py-3 rounded-lg text-sm md:text-base font-semibold hover:bg-indigo-600 transition duration-300 shadow-md"
                         >
                             Send Message
                         </button>
-                    </form>
 
+                    </form>
                 </div>
                 <br />
 
 
 
                 <div className="mt-20">
-                    <h1 className="text-center  text-black text-4xl font-bold ">Find Our Office on Map</h1>
-                    <p className="text-center text-gray-400 mt-4">Contact us and get strapped in for a better adventure experience in your life-time. Just look for opportunity to be with nature.</p>
+                    <h1 className="text-center  text-black text-3xl md:text-4xl font-bold ">Find Our Office on Map</h1>
+                    <p className="text-center text-sm md:text-base text-gray-400 mt-4">Contact us and get strapped in for a better adventure experience in your life-time. Just look for opportunity to be with nature.</p>
 
                     <div className="max-w-6xl  mt-10 mx-auto px-6 md:px-16 pb-16">
 

@@ -5,6 +5,11 @@ import API from "../api/axios";
 import { MapPin, Clock, Users } from "lucide-react";
 import { AuthContext } from "../reducers/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import Heading from "../components/Heading";
+import Footer from "../components/Footer";
+import TopTour from "./TopTour";
+import Reviews from "./Reviews";
+import { data } from "framer-motion/client";
 
 interface TimeSlot {
   time: string;
@@ -28,7 +33,7 @@ interface Experience {
   slots?: Slot[];
 }
 
-function Details() {
+function Details(content: any) {
 
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -41,6 +46,7 @@ function Details() {
 
   const { state } = useContext(AuthContext);
   const role = localStorage.getItem("role")
+
   useEffect(() => {
 
     if (!id) return;
@@ -65,7 +71,7 @@ function Details() {
   if (!experience)
     return <div className="text-center py-20">Experience not found</div>;
 
-  /* Generate 4 future booking dates */
+  // Generate 4 future booking dates 
   const generateDates = () => {
 
     const dates: string[] = [];
@@ -133,22 +139,39 @@ function Details() {
   const total = subtotal + tax;
 
   const handleBooking = () => {
-
     if (!selectedTime) return;
 
     const slot = times.find((t) => t.time === selectedTime);
-
     if (!slot) return;
 
     if (slot.booked + quantity > slot.capacity) {
-
       alert("Only limited seats available for this time slot.");
       return;
-
     }
 
+    // Booking count Update
+    setExperience((prev: any) => {
+      if (!prev) return prev;
 
+      return {
+        ...prev,
+        slots: prev.slots?.map((s: any) => {
+          if (s.date === selectedDate) {
+            return {
+              ...s,
+              times: s.times.map((t: any) =>
+                t.time === selectedTime
+                  ? { ...t, booked: t.booked + quantity }
+                  : t
+              ),
+            };
+          }
+          return s;
+        }),
+      };
+    });
 
+    // Navigation
     if (state.isAuthenticated) {
       if (role === "admin") {
         navigate(`/AdminPage/${experience._id}`);
@@ -163,33 +186,46 @@ function Details() {
             },
           },
         });
-
       }
-
     } else {
-      alert("Please SignUp or SignIN your account")
-      navigate("/signin")
+      alert("Please SignUp or SignIN your account");
+      navigate("/signin");
     }
-
-  }
-    ;
+  };
+  ;
 
   return (
-    <div className="bg-gray-100 min-h-screen py-10">
+    <div className="bg-gray-100 min-h-screen py-10 ">
+      <div>
+        <Heading
+          h="welcome to Travel World"
+          p="Explore amazing destinations" />
+      </div>
 
-      <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto px-4  gap-8 mt-5">
+        <div className="text-center max-w-6xl mx-auto px-4 py-8">
+          <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4">
+            View the Details
+          </h1>
 
+          <p className="text-gray-600  text-sm md:text-lg ">
+            Discover everything you need to know about your next adventure.
+            From breathtaking destinations to unforgettable experiences,
+            we provide all the details to help you plan the perfect journey
+            with confidence and ease.
+          </p>
+        </div>
         {/* LEFT SIDE */}
         <div className="md:col-span-2 space-y-6">
 
           <img
             src={experience.image}
-            className="w-full h-80 object-cover rounded-xl shadow"
+            className="w-full md:h-[75vh] h-[40vh] object-cover rounded-xl shadow"
           />
 
           <div>
 
-            <h1 className="text-3xl font-bold">
+            <h1 className="md:text-3xl text-xl text-gray-800 font-bold">
               {experience.title}
             </h1>
 
@@ -212,16 +248,16 @@ function Details() {
 
             </div>
 
-            <p className="text-gray-600 mt-4">
+            <p className="text-gray-600  text-sm md:text-base mt-4">
               {experience.description}
             </p>
 
           </div>
 
           {/* DATE SELECT */}
-          <div>
+          <div className="text-gray-800">
 
-            <h2 className="font-semibold mb-3">
+            <h2 className="font-semibold text-gray-800 mb-3">
               Select Date
             </h2>
 
@@ -256,7 +292,7 @@ function Details() {
           </div>
 
           {/* TIME SELECT WITH ANIMATION */}
-          <div>
+          <div className="text-gray-800">
 
             <h2 className="font-semibold mb-3">
               Select Time
@@ -281,7 +317,7 @@ function Details() {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedTime(t.time)}
                     disabled={t.booked >= t.capacity}
-                    className={`px-4 py-2 rounded-lg border text-sm
+                    className={`ml-6 md:ml-0 px-4 py-2 rounded-lg border text-sm
                       ${t.booked >= t.capacity
                         ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                         : selectedTime === t.time
@@ -309,13 +345,13 @@ function Details() {
         </div>
 
         {/* BOOKING CARD */}
-        <div className="bg-white p-6 rounded-xl shadow h-fit sticky top-24">
+        <div className=" text-gray-800 mt-10 p-6 rounded-xl shadow h-fit sticky top-24">
 
           <p className="text-gray-500 text-sm">
             Starting from
           </p>
 
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-xl font-bold">
             ₹{experience.price}
           </h2>
 
@@ -369,22 +405,29 @@ function Details() {
           <button
             disabled={!selectedTime}
             onClick={handleBooking}
-            className={`w-full mt-6 py-3 rounded-lg font-semibold
+            className={`w-full mt-6 py-3 rounded-lg bg-yellow-300 font-semibold
               ${selectedTime
                 ? "bg-yellow-400 hover:bg-yellow-500"
                 : "bg-gray-200 text-gray-500 cursor-not-allowed"
               }`}
           >
-
+            {!state.isAuthenticated && (
+              "Please Login"
+            )}
             {state.isAuthenticated && role === "user" && (
               "Confirm Booking")}
+            {state.isAuthenticated && role === "admin" && (
+              "Edit the Details")}
 
           </button>
 
         </div>
 
       </div>
-
+      <br />
+      <TopTour />
+      <Reviews />
+      <Footer />
     </div>
   );
 }

@@ -381,6 +381,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import API from "../api/axios";
+import Footer from "../components/Footer";
 
 function Booking() {
 
@@ -506,147 +507,150 @@ function Booking() {
   };
 
   return (
+    <>
 
-    <div className="max-w-6xl mx-auto py-10 px-4 grid md:grid-cols-3 gap-10">
+      <div className="w-full md:px-20 px-4 text-gray-800 mx-auto py-10 px-4 grid md:grid-cols-3 gap-10 bg-white">
 
-      {/* LEFT SECTION */}
+        {/* LEFT SECTION */}
 
-      <div className="md:col-span-2 bg-white rounded-xl shadow-sm p-6">
+        <div className="md:col-span-2 bg-white rounded-xl shadow-sm p-6">
 
-        <h1 className="text-xl font-semibold mb-5">Checkout</h1>
+          <h1 className="text-xl font-semibold mb-5">Checkout</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="border rounded-md px-3 py-2 text-sm"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="border h-10 rounded-md px-3 py-2 text-sm"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <label htmlFor="">
+              <input
+                type="email"
+                placeholder="Email"
+                className="border w-full h-10 rounded-md px-3 py-2 text-sm"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <p className="text-sm "> <span className="text-red-500">*</span>Please Enter Valid Email for the Updates</p>
+            </label>
+          </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="border rounded-md px-3 py-2 text-sm"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          {/* PROMO */}
+
+          <div className="flex gap-2 mb-2">
+
+            <input
+              type="text"
+              placeholder="Promo Code"
+              className="border rounded-md px-3 py-2 text-sm flex-1"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              disabled={promoApplied}
+            />
+
+            <button
+              onClick={handleApplyPromo}
+              className="bg-black text-white px-4 py-2 rounded-md text-sm"
+            >
+              {promoLoading ? "Checking..." : promoApplied ? "Applied" : "Apply"}
+            </button>
+
+          </div>
+
+          {message && (
+            <p className="text-sm text-green-600 mb-4">{message}</p>
+          )}
+
+          {/* TERMS */}
+
+          <label className="flex items-center gap-2 text-sm">
+
+            <input
+              type="checkbox"
+              checked={agree}
+              onChange={() => setAgree(!agree)}
+            />
+
+            I agree to the terms
+
+          </label>
 
         </div>
 
-        {/* PROMO */}
+        {/* RIGHT SECTION */}
 
-        <div className="flex gap-2 mb-2">
+        <div className="border rounded-xl bg-white shadow-sm p-6">
 
-          <input
-            type="text"
-            placeholder="Promo Code"
-            className="border rounded-md px-3 py-2 text-sm flex-1"
-            value={promoCode}
-            onChange={(e) => setPromoCode(e.target.value)}
-            disabled={promoApplied}
-          />
+          <h2 className="font-semibold mb-4 text-lg">Booking Summary</h2>
+
+          <div className="space-y-2 text-sm">
+
+            <div className="flex justify-between">
+              <span>Experience</span>
+              <span>{experience.title}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Date</span>
+              <span>{booking.date}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Time</span>
+              <span>{booking.time}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Seats</span>
+              <span>{booking.quantity}</span>
+            </div>
+
+            <hr />
+
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>₹{subtotal}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Tax</span>
+              <span>₹{tax}</span>
+            </div>
+
+            {discount > 0 && (
+              <div className="flex justify-between text-green-600">
+                <span>Discount</span>
+                <span>-₹{discount}</span>
+              </div>
+            )}
+
+            <hr />
+
+            <div className="flex justify-between font-semibold text-lg">
+              <span>Total</span>
+              <span>₹{total}</span>
+            </div>
+
+          </div>
 
           <button
-            onClick={handleApplyPromo}
-            className="bg-black text-white px-4 py-2 rounded-md text-sm"
+            onClick={handleBooking}
+            disabled={loading}
+            className="w-full mt-6 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 font-medium"
           >
-            {promoLoading ? "Checking..." : promoApplied ? "Applied" : "Apply"}
+
+            {loading ? "Processing..." : "Pay and Confirm"}
+
           </button>
 
         </div>
 
-        {message && (
-          <p className="text-sm text-green-600 mb-4">{message}</p>
-        )}
-
-        {/* TERMS */}
-
-        <label className="flex items-center gap-2 text-sm">
-
-          <input
-            type="checkbox"
-            checked={agree}
-            onChange={() => setAgree(!agree)}
-          />
-
-          I agree to the terms
-
-        </label>
-
       </div>
-
-      {/* RIGHT SECTION */}
-
-      <div className="border rounded-xl bg-white shadow-sm p-6">
-
-        <h2 className="font-semibold mb-4 text-lg">Booking Summary</h2>
-
-        <div className="space-y-2 text-sm">
-
-          <div className="flex justify-between">
-            <span>Experience</span>
-            <span>{experience.title}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Date</span>
-            <span>{booking.date}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Time</span>
-            <span>{booking.time}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Seats</span>
-            <span>{booking.quantity}</span>
-          </div>
-
-          <hr />
-
-          <div className="flex justify-between">
-            <span>Subtotal</span>
-            <span>₹{subtotal}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Tax</span>
-            <span>₹{tax}</span>
-          </div>
-
-          {discount > 0 && (
-            <div className="flex justify-between text-green-600">
-              <span>Discount</span>
-              <span>-₹{discount}</span>
-            </div>
-          )}
-
-          <hr />
-
-          <div className="flex justify-between font-semibold text-lg">
-            <span>Total</span>
-            <span>₹{total}</span>
-          </div>
-
-        </div>
-
-        <button
-          onClick={handleBooking}
-          disabled={loading}
-          className="w-full mt-6 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 font-medium"
-        >
-
-          {loading ? "Processing..." : "Pay and Confirm"}
-
-        </button>
-
-      </div>
-
-    </div>
-
+      <Footer />
+    </>
   );
 }
 

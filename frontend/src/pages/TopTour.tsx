@@ -58,7 +58,7 @@ function TopTour() {
                     }}
                 >
 
-                    {tours.map((tour) => (
+                    {tours.map((tour: any) => (
                         <SwiperSlide key={tour._id}>
 
                             <div className="bg-white/95 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500">

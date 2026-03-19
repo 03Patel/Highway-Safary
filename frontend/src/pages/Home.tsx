@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 import Footer from "../components/Footer";
 import Heading from "../components/Heading";
 import TopTour from "./TopTour";
+import Reviews from "./Reviews";
 
 
 
@@ -23,7 +24,7 @@ function Home() {
 
   const navigate = useNavigate();
 
-  const handleSearch = (value) => {
+  const handleSearch = (value: any) => {
     setSearch(value);
     const filteredData = list.filter((item) => {
       item.title.toLocaleLowerCase().includes(value.toLocaleLowerCase())
@@ -73,20 +74,8 @@ function Home() {
 
       {/* Content */}
       <div className="bg-gray-100 min-h-screen py-10 ">
-        <Heading />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+        <Heading h="Explore the World" p="  Discover amazing places, unique experiences, and unforgettable journeys." />
 
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            Explore the World
-          </h1>
-
-          <p className="max-w-2xl text-sm md:text-lg mb-6">
-            Discover amazing places, unique experiences, and unforgettable journeys.
-          </p>
-
-
-
-        </div>
         <div className="max-w-6xl mx-auto px-6">
 
           <div className="w-full flex flex-col items-center justify-center text-center py-12 px-4">
@@ -160,6 +149,7 @@ function Home() {
         <br />
         <br />
         <TopTour />
+        <Reviews />
         <Footer />
       </div>
 

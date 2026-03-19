@@ -79,17 +79,8 @@ const blogs = [
 function Blog() {
     return (
         <div className="px-6 md:px-16 py-16 bg-white min-h-screen">
-            <Heading />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+            <Heading h="Stories & Travel Guides" p="   Dive into curated travel stories, hidden gems, and expert insights designed to inspire your next adventure." />
 
-                <h1 className="text-3xl md:text-5xl font-bold mb-4">
-                    Stories & Travel Guides
-                </h1>
-
-                <p className="max-w-2xl text-sm md:text-lg mb-6">
-                    Dive into curated travel stories, hidden gems, and expert insights designed to inspire your next adventure.
-                </p>
-            </div>
 
 
 

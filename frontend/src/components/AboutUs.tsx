@@ -5,21 +5,9 @@ import Heading from './Heading'
 function AboutUs() {
     return (
         <div>
-            <Heading />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
-
-                <h1 className="text-3xl md:text-5xl font-bold mb-4">
-                    About Highway safary Family
-                </h1>
-
-                <p className="max-w-2xl text-sm md:text-lg mb-6">
-                    Where you discover amazing places, unique experiences, and unforgettable journeys.
-                </p>
-
-
-
-            </div>
-
+            <Heading h=" About Highway safary Family"
+                p=" Where you discover amazing places, unique experiences, and unforgettable journeys."
+            />
             <section className="px-6 md:px-16 py-16 bg-white">
                 <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
 
