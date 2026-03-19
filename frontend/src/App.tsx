@@ -16,7 +16,7 @@ import Navbar from "./components/Navbar";
 import Banner from "./components/Banner"
 import AboutUs from "./components/AboutUs";
 import Blog from "./components/Blog";
-import { Contact } from "lucide-react";
+import Cont from "./components/Cont"
 
 function App() {
   return (
@@ -37,7 +37,7 @@ function App() {
         <Route path="/mybookings" element={<MyBookings />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/blog" element={<Blog />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/con" element={<Cont />} />
       </Routes>
     </BrowserRouter>
   );

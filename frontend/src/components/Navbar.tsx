@@ -22,7 +22,7 @@ function Navbar() {
       <li><Link to="/aboutus">About Us</Link></li>
       <li><Link to="destination">Destinations</Link></li>
       <li><Link to="blog">Blog</Link></li>
-      <li><Link to="contact">Contact</Link></li>
+      <li><Link to="con">Contact</Link></li>
     </>
   )
 

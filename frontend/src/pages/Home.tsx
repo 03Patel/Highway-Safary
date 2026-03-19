@@ -5,13 +5,16 @@ import { AuthContext } from "../reducers/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Experience } from "../types";
 import { Plus } from "lucide-react";
+import Footer from "../components/Footer";
 import Heading from "../components/Heading";
+import TopTour from "./TopTour";
+
 
 
 function Home() {
 
   const { state } = useContext(AuthContext);
-
+  const [search, setSearch] = useState("");
   const [list, setList] = useState<Experience[]>([]);
 
 
@@ -19,6 +22,15 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+
+  const handleSearch = (value) => {
+    setSearch(value);
+    const filteredData = list.filter((item) => {
+      item.title.toLocaleLowerCase().includes(value.toLocaleLowerCase())
+    })
+    setFiltered(filteredData)
+  }
+
 
   const role = localStorage.getItem("role");
 
@@ -62,12 +74,34 @@ function Home() {
       {/* Content */}
       <div className="bg-gray-100 min-h-screen py-10 ">
         <Heading />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+            Explore the World
+          </h1>
+
+          <p className="max-w-2xl text-sm md:text-lg mb-6">
+            Discover amazing places, unique experiences, and unforgettable journeys.
+          </p>
+
+
+
+        </div>
         <div className="max-w-6xl mx-auto px-6">
 
-          <div className="flex justify-between items-center mb-8 a">
-            <h2 className="text-2xl font-bold text-gray-700">
-              Available Experiences
+          <div className="w-full flex flex-col items-center justify-center text-center py-12 px-4">
+
+            {/* Heading */}
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              Top Destinations
             </h2>
+
+            {/* Paragraph */}
+            <p className="max-w-6xl text-gray-600 text-xs md:text-lg  ">
+              We’ve helped countless explorers experience the beauty of the world through
+              carefully curated journeys. Whether it’s a one-day escape or a two-week adventure,
+              our mission is to turn every trip into a story worth remembering.
+            </p>
           </div>
 
           {loading ? (
@@ -123,6 +157,10 @@ function Home() {
           )}
 
         </div>
+        <br />
+        <br />
+        <TopTour />
+        <Footer />
       </div>
 
     </>

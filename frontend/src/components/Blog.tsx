@@ -1,12 +1,15 @@
 import React from "react";
+import Footer from "./Footer";
+import Heading from "./Heading";
 
 const blogs = [
+
     {
         id: 1,
-        title: "Top 5 Road Trips in India",
-        desc: "Explore the most scenic and unforgettable road trips across India.",
+        title: "Top 10 Places to Visit in India",
+        desc: "Explore the most beautiful destinations across India, from mountains to beaches.",
         image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-        date: "March 10, 2026",
+        date: "March 1, 2026",
     },
     {
         id: 2,
@@ -17,19 +20,81 @@ const blogs = [
     },
     {
         id: 3,
-        title: "Best Budget Destinations",
-        desc: "Travel more while spending less with these amazing places.",
-        image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800",
-        date: "Feb 25, 2026",
+        title: "Best Beach Destinations in the World",
+        desc: "Discover stunning beaches with crystal clear water and white sand.",
+        image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+        date: "March 8, 2026",
     },
-];
+    {
+        id: 4,
+        title: "Budget Travel Tips for Beginners",
+        desc: "Learn how to travel the world without spending too much money.",
+        image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828",
+        date: "March 10, 2026",
+    },
+    {
+        id: 5,
+        title: "Top Mountain Adventures You Must Try",
+        desc: "Experience thrilling adventures in the world’s most beautiful mountains.",
+        image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+        date: "March 12, 2026",
+    },
+    {
+        id: 6,
+        title: "Best Cities for Nightlife Lovers",
+        desc: "Explore cities that come alive at night with vibrant culture and energy.",
+        image: "https://images.unsplash.com/photo-1499346030926-9a72daac6c63",
+        date: "March 15, 2026",
+    },
+    {
+        id: 7,
+        title: "Solo Travel Guide for First-Time Travelers",
+        desc: "Everything you need to know before going on your first solo trip.",
+        image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+        date: "March 18, 2026",
+    },
+    {
+        id: 8,
+        title: "Hidden Gems You Must Visit in 2026",
+        desc: "Unexplored destinations that offer unique and peaceful experiences.",
+        image: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1",
+        date: "March 20, 2026",
+    },
+    {
+        id: 9,
+        title: "Top Food Destinations Around the World",
+        desc: "Taste the best cuisines from famous food destinations globally.",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+        date: "March 22, 2026",
+    },
+    {
+        id: 10,
+        title: "Best Weekend Getaways Near You",
+        desc: "Short and refreshing trips perfect for a quick escape from daily life.",
+        image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429",
+        date: "March 27, 2026",
+    }
+]
 
 function Blog() {
     return (
         <div className="px-6 md:px-16 py-16 bg-white min-h-screen">
+            <Heading />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+
+                <h1 className="text-3xl md:text-5xl font-bold mb-4">
+                    Stories & Travel Guides
+                </h1>
+
+                <p className="max-w-2xl text-sm md:text-lg mb-6">
+                    Dive into curated travel stories, hidden gems, and expert insights designed to inspire your next adventure.
+                </p>
+            </div>
+
+
 
             {/* Heading */}
-            <div className="text-center mb-12">
+            <div className="text-center mb-12 mt-10">
                 <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
                     Travel Stories & Tips
                 </h1>
@@ -69,6 +134,7 @@ function Blog() {
                     </div>
                 ))}
             </div>
+            <Footer />
         </div>
     );
 }
