@@ -21,21 +21,23 @@ function SignIn() {
 
             const user = res.data; // {id, email, role, userId}
             const token = res.data.token;
+            console.log(user.user.role)
+            console.log()
 
 
             // Store token and role in localStorage
             localStorage.setItem("token", token);
-            localStorage.setItem("role", user.role)
-            localStorage.setItem("email", user.email);
-            localStorage.setItem("userId", user.userId)
+            localStorage.setItem("role", user.user.role)
+            localStorage.setItem("email", user.user.email);
+            localStorage.setItem("userId", user.user.userId)
 
             // Update context
             dispatch({
                 type: "LOGIN",
                 payload: {
-                    userId: user.userId,
-                    email: user.email,
-                    role: user.role,
+                    userId: user.user.userId,
+                    email: user.user.email,
+                    role: user.user.role,
                     token: token,
 
                 }

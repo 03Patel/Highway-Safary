@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const otpRoutes = require("./routes/otp");
+
 const experiencesRoute = require("./routes/experiences");
 const bookingsRoute = require("./routes/bookings");
 const promoRoute = require("./routes/promo");
@@ -19,7 +19,7 @@ app.use(express.json());
 
 
 app.use("/api/tours", TourRoutes)
-app.use("/api/otp", otpRoutes);
+
 app.use("/api/experiences", experiencesRoute);
 app.use("/api/bookings", bookingsRoute);
 app.use("/api/promo", promoRoute);

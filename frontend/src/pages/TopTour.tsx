@@ -93,9 +93,7 @@ function TopTour() {
                                         ⭐ {tour.rating}
                                     </p>
 
-                                    <button className="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition">
-                                        View Details
-                                    </button>
+
 
                                 </div>
 

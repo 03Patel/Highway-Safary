@@ -55,8 +55,9 @@ router.get("/", async (req, res) => {
     try {
 
         const bookings = await Booking.find()
-            .select("refId name status")   // only these fields
+            .select("refId name status image title date time seats")   // only these fields
             .sort({ createdAt: -1 });
+        console.log(bookings)
 
         res.json({
             success: true,

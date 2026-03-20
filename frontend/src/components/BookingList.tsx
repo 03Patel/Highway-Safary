@@ -9,20 +9,34 @@ type Booking = {
     name: string;
     status: string;
     image?: string;
+    title?: string;
+    date?: string;
+    time?: string;
 };
 
 function BookingList() {
     const [bookings, setBookings] = useState<Booking[]>([]);
+
     const [updatedStatus, setUpdatedStatus] = useState<{ [key: string]: string }>({});
 
     const { state } = useContext(AuthContext);
+    const role = localStorage.getItem("role"); // ✅ user / admin
 
     const fetchBookings = async () => {
         try {
-            const res = await API.get("/bookings");
-            setBookings(res.data.bookings);
+            if (role === "admin") {
+                const res = await API.get("/bookings");
+                setBookings(res.data.bookings);
+                console.log(res.data.bookings)
+            } else {
+                const userId = localStorage.getItem("userId");
+                if (!userId) return;
+
+                const res = await API.get(`/bookings/user/${userId}`);
+                setBookings(res.data);
+            }
         } catch (err) {
-            console.log(err);
+            console.log("ERROR:", err);
         }
     };
 
@@ -46,81 +60,112 @@ function BookingList() {
         fetchBookings();
     };
 
+
+
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
+        <div className="min-h-screen bg-white text-gray-800 p-6">
 
-            <h1 className="text-2xl font-bold mb-6">Bookings</h1>
+            <h1 className="text-2xl font-bold mb-6">
+                {role === "admin" ? "All Bookings (Admin)" : "My Bookings"}
+            </h1>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {bookings.length === 0 ? (
+                <p>No bookings found</p>
+            ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                {bookings.map((b) => (
-                    <div
-                        key={b._id}
-                        className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
-                    >
+                    {bookings.map((b) => (
+                        <div
+                            key={b._id}
+                            className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
+                        >
 
-                        {/* Image */}
-                        <img
-                            src={b.image || "https://via.placeholder.com/300x180"}
-                            alt=""
-                            className="w-full h-40 object-cover"
-                        />
+                            {/* Image */}
+                            <img
+                                src={b.image}
+                                alt=""
+                                className="w-full h-40 object-cover"
+                            />
 
-                        {/* Content */}
-                        <div className="p-4">
+                            {/* Content */}
+                            <div className="p-4">
 
-                            <h2 className="font-semibold text-lg">{b.name}</h2>
-                            <p className="text-sm text-gray-500 mb-2">
-                                Ref ID: {b.refId}
-                            </p>
+                                <h2 className="font-semibold text-lg">{b.name}</h2>
 
-                            {/* Status */}
-                            {state.isAuthenticated ? (
-                                <select
-                                    value={updatedStatus[b._id] || b.status}
-                                    onChange={(e) =>
-                                        handleStatusChange(b._id, e.target.value)
-                                    }
-                                    className="border rounded px-3 py-1 w-full mb-3"
-                                >
-                                    <option value="pending">Pending</option>
-                                    <option value="confirmed">Confirmed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                            ) : (
-                                <span className="inline-block bg-gray-100 px-3 py-1 rounded text-sm mb-3">
-                                    {b.status}
-                                </span>
-                            )}
+                                <p className="text-sm text-gray-500">
+                                    Ref ID: {b.refId}
+                                </p>
 
-                            {/* Actions */}
-                            {state.isAuthenticated && (
-                                <div className="flex justify-between">
 
-                                    <button
-                                        onClick={() => saveStatus(b._id)}
-                                        className="flex items-center gap-1 bg-indigo-500 text-white px-3 py-1.5 rounded"
+
+                                <>
+                                    <p className="text-sm text-gray-500">
+                                        Title: {b.title}
+                                    </p>
+
+                                    <p className="text-sm text-gray-500">
+                                        Date: {b.date} <br />
+                                        Time: {b.time}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        Slote: {b.seats} <br />
+
+                                    </p>
+
+                                </>
+
+
+                                {/* STATUS */}
+                                {role === "admin" ? (
+                                    <select
+                                        value={updatedStatus[b._id] || b.status}
+                                        onChange={(e) =>
+                                            handleStatusChange(b._id, e.target.value)
+                                        }
+                                        className="border rounded px-3 py-1 w-full mt-2"
                                     >
-                                        <Save size={16} />
-                                        Save
-                                    </button>
+                                        <option value="pending">Pending</option>
+                                        <option value="confirmed">Confirmed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                ) : (
+                                    <p className="mt-2  text-sm">
+                                        Status:
+                                        <span className="ml-2 px-2 py-1 bg-gray-100 rounded">
+                                            {b.status}
+                                        </span>
+                                    </p>
+                                )}
 
-                                    <button
-                                        onClick={() => deleteBooking(b._id)}
-                                        className="flex items-center gap-1 bg-red-500 text-white px-3 py-1.5 rounded"
-                                    >
-                                        <Trash2 size={16} />
-                                        Delete
-                                    </button>
+                                {/* ADMIN ACTIONS */}
+                                {role === "admin" && (
+                                    <div className="flex justify-between mt-3">
 
-                                </div>
-                            )}
+                                        <button
+                                            onClick={() => saveStatus(b._id)}
+                                            className="flex items-center gap-1 bg-indigo-500 text-white px-3 py-1.5 rounded"
+                                        >
+                                            <Save size={16} />
+                                            Save
+                                        </button>
 
+                                        <button
+                                            onClick={() => deleteBooking(b._id)}
+                                            className="flex items-center gap-1 bg-red-500 text-white px-3 py-1.5 rounded"
+                                        >
+                                            <Trash2 size={16} />
+                                            Delete
+                                        </button>
+
+                                    </div>
+                                )}
+
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
 
-            </div>
+                </div>
+            )}
         </div>
     );
 }

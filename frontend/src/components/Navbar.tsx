@@ -83,7 +83,7 @@ function Navbar() {
 
               {state.isAuthenticated && role === "user" && (
                 <>
-                  <li><Link to="/mybookings">My Bookings</Link></li>
+                  <li><Link to="/bookingdetails">My Bookings</Link></li>
 
                 </>
               )}
@@ -116,7 +116,7 @@ function Navbar() {
               {navItems}
               {state.isAuthenticated && role === "user" && (
                 <>
-                  <li><Link to="/mybookings">My Bookings</Link></li>
+                  <li><Link to="/bookingdetails">My Bookings</Link></li>
                 </>
               )}
 
