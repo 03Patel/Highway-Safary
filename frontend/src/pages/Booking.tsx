@@ -509,7 +509,7 @@ function Booking() {
   return (
     <>
 
-      <div className="w-full md:px-20 px-4 text-gray-800 mx-auto py-10 px-4 grid md:grid-cols-3 gap-10 bg-white">
+      <div className="w-full md:px-20 px-8 text-gray-800 mx-auto py-10 px-4 grid md:grid-cols-3 gap-10 bg-white">
 
         {/* LEFT SECTION */}
 
