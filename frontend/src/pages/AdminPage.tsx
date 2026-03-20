@@ -58,7 +58,7 @@ function AdminPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 py-10">
+        <div className="min-h-screen bg-white text-gray-800 py-10">
 
             {/* PAGE HEADER */}
             <div className="max-w-7xl mx-auto px-4 mb-8">
