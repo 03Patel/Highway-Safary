@@ -509,7 +509,7 @@ function Booking() {
   return (
     <>
 
-      <div className="w-full md:px-20 px-8 text-gray-800 mx-auto py-10 px-4 grid md:grid-cols-3 gap-10 bg-white">
+      <div className="w-full md:px-20 px-1 text-gray-800 mx-auto py-10 px-4 grid md:grid-cols-3 gap-10 bg-white">
 
         {/* LEFT SECTION */}
 
@@ -582,7 +582,7 @@ function Booking() {
 
         {/* RIGHT SECTION */}
 
-        <div className="border rounded-xl bg-white shadow-sm p-6">
+        <div className="border rounded-xl md:px-20 px-2 bg-white shadow-sm p-6">
 
           <h2 className="font-semibold mb-4 text-lg">Booking Summary</h2>
 
