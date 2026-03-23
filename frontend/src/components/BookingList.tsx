@@ -27,7 +27,7 @@ function BookingList() {
             if (role === "admin") {
                 const res = await API.get("/bookings");
                 setBookings(res.data.bookings);
-                console.log(res.data.bookings)
+
             } else {
                 const userId = localStorage.getItem("userId");
                 if (!userId) return;

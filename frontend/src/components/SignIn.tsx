@@ -21,8 +21,7 @@ function SignIn() {
 
             const user = res.data; // {id, email, role, userId}
             const token = res.data.token;
-            console.log(user.user.role)
-            console.log()
+           
 
 
             // Store token and role in localStorage

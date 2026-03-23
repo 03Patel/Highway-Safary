@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
 
         const { experienceId, refId, userId, image, name, email, date, time, seats, promoCode, status, title } = req.body;
 
-        console.log("Booking Data:", req.body);
+
 
         const exp = await Experience.findById(experienceId);
 
@@ -57,7 +57,7 @@ router.get("/", async (req, res) => {
         const bookings = await Booking.find()
             .select("refId name status image title date time seats")   // only these fields
             .sort({ createdAt: -1 });
-        console.log(bookings)
+
 
         res.json({
             success: true,
@@ -157,7 +157,7 @@ router.get('/:id', async (req, res) => {
 router.get("/user/:userId", async (req, res) => {
     try {
 
-        console.log("UserId received:", req.params.userId);
+
 
         const bookings = await Booking.find({
             userId: req.params.userId
