@@ -22,7 +22,7 @@ function Banner() {
     return (
         <>
             {/* HERO SECTION */}
-            <div className='max-w-screen-2xl min-h-screen container mx-auto md:px-20 px-4 flex flex-col md:flex-row bg-pink-50'>
+            <div className='max-w-screen-2xl md:min-h-screen h-[50vh] container mx-auto md:px-20 px-4 flex flex-col md:flex-row bg-pink-50'>
 
                 {/* LEFT CONTENT */}
                 <div className='w-full md:w-1/2 mt-12 md:mt-20 order-1 flex justify-center md:justify-start'>
@@ -56,11 +56,15 @@ function Banner() {
                                 <button onClick={() => navigate("/signup")} className="btn btn-outline hidden md:block btn-primary">
                                     Get Started
                                 </button>
+                                <br />
+                                <br />
 
                             </div>
 
                         </div>
                     </div>
+                    <br />
+                    <br />
                 </div>
 
                 {/* RIGHT CONTENT */}

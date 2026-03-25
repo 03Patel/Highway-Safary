@@ -112,7 +112,7 @@ function Booking() {
 
   return (
     <>
-      <div className="w-full md:px-20 px-6 py-10 grid md:grid-cols-3 gap-10 bg-white">
+      <div className="w-full text-gray-800 md:px-20 px-6 py-10 grid md:grid-cols-3 gap-10 bg-white">
 
         {/* LEFT */}
         <div className="md:col-span-2 bg-white rounded-xl shadow-sm p-6">

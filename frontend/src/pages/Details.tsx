@@ -153,7 +153,7 @@ function Details() {
   if (!experience) return <div className="text-center py-20">Not Found</div>;
 
   return (
-    <div className="bg-gray-100 min-h-screen py-10">
+    <div className="bg-gray-100 text-gray-800 min-h-screen py-10">
       <Heading h="Welcome to Travel World" p="Explore amazing destinations" />
 
       <div className="max-w-6xl mx-auto px-4 mt-5">
@@ -189,8 +189,8 @@ function Details() {
                 key={date}
                 onClick={() => handleDateSelect(date)}
                 className={`px-4 py-2 rounded-lg border ${selectedDate === date
-                    ? "bg-yellow-400"
-                    : "bg-white hover:bg-gray-50"
+                  ? "bg-yellow-400"
+                  : "bg-white hover:bg-gray-50"
                   }`}
               >
                 {new Date(date).toLocaleDateString("en-IN", {
@@ -220,8 +220,8 @@ function Details() {
                   onClick={() => setSelectedTime(t.time)}
                   disabled={t.booked >= t.capacity}
                   className={`px-4 py-2 rounded-lg border ${selectedTime === t.time
-                      ? "bg-yellow-400"
-                      : "bg-white hover:bg-yellow-50"
+                    ? "bg-yellow-400"
+                    : "bg-white hover:bg-yellow-50"
                     }`}
                 >
                   {t.time} ({t.capacity - t.booked} left)
@@ -268,6 +268,8 @@ function Details() {
           </button>
         </div>
       </div>
+      <br />
+      <br />
 
       <TopTour />
       <Reviews />

@@ -95,15 +95,7 @@ function Home() {
         </div>
 
         {/* SEARCH */}
-        <div className="flex justify-center mb-8">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search experiences..."
-            className="border border-gray-300 rounded-lg p-2 w-full max-w-md focus:ring-2 focus:ring-indigo-500 outline-none"
-          />
-        </div>
+
 
         {/* LOADING SKELETON */}
         {loading ? (
@@ -127,6 +119,7 @@ function Home() {
                 onDelete={handleDelete}
               />
             ))}
+
 
             {/* ADMIN ADD CARD */}
             {state.isAuthenticated && role === "admin" && (
@@ -155,6 +148,9 @@ function Home() {
 
         )}
       </div>
+      <br />
+      <br />
+      <br />
 
       {/* EXTRA SECTIONS */}
       <TopTour />
