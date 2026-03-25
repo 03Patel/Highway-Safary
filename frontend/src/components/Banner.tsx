@@ -64,7 +64,7 @@ function Banner() {
                 </div>
 
                 {/* RIGHT CONTENT */}
-                <div className="w-full mt-[-40px] md:mt-[-30px] order-2 md:w-1/2 flex justify-center items-center overflow-hidden">
+                <div className="w-full hidden md:block mt-[-40px] md:mt-[-30px] order-2 md:w-1/2 flex justify-center items-center overflow-hidden">
                     <Suspense fallback={<div className="h-[300px] flex items-center justify-center">Loading...</div>}>
                         <TravelHero />
                     </Suspense>
