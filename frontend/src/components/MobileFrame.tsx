@@ -58,7 +58,7 @@ function MobileFrame() {
   }, []);
 
   return (
-    <div className="flex w-full items-center justify-center h-screen">
+    <div className="flex w-full items-center hidden md:block justify-center h-screen">
 
       {/* Phone Frame */}
       <div className="relative md:w-[300px] w-[200px] md:h-[600px] h-[400px] overflow-hidden flex items-start justify-center bg-black rounded-[40px] shadow-2xl p-2 z-50">
