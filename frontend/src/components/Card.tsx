@@ -1,17 +1,10 @@
-
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../reducers/AuthContext";
 import API from "../api/axios";
-import { Experience } from "../types";
 import { MapPin, Trash2 } from "lucide-react";
 
-type Props = {
-  experience: Experience;
-  onDelete: (id: string) => void;
-};
-
-function Card({ experience, onDelete }: Props) {
+function Card({ experience, onDelete }) {
   const navigate = useNavigate();
   const { state } = useContext(AuthContext);
 
@@ -20,7 +13,8 @@ function Card({ experience, onDelete }: Props) {
 
   const isAdmin = state.isAuthenticated && role === "admin";
 
-  const handleDelete = async () => {
+  // ✅ memoized functions
+  const handleDelete = useCallback(async () => {
     if (!experience._id) return;
 
     const confirmDelete = window.confirm("Delete this experience?");
@@ -33,23 +27,26 @@ function Card({ experience, onDelete }: Props) {
 
       onDelete(experience._id);
     } catch (err) {
-      console.error("Delete error:", err);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Delete error:", err);
+      }
       alert("Could not delete item");
     }
-  };
+  }, [experience._id, token, onDelete]);
 
-  const openDetails = () => {
+  const openDetails = useCallback(() => {
     navigate(`/details/${experience._id}`);
-  };
+  }, [navigate, experience._id]);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border hover:shadow-lg transition overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm border hover:shadow-lg transition duration-300 overflow-hidden">
 
       <div className="relative">
         <img
           src={experience.image}
           alt={experience.title}
-          className="w-full h-52 "
+          loading="lazy" // ✅ lazy load
+          className="w-full h-52 object-cover"
         />
 
         <span className="absolute top-3 right-3 bg-blue-500 text-sm font-medium px-3 py-1 rounded-full shadow">
@@ -77,11 +74,11 @@ function Card({ experience, onDelete }: Props) {
           <button
             onClick={openDetails}
             className={`px-4 py-2 text-sm rounded-lg font-medium transition ${state.isAuthenticated
-              ? "bg-indigo-500 hover:bg-indigo-600 text-white"
-              : "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
+                ? "bg-indigo-500 hover:bg-indigo-600 text-white"
+                : "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
               }`}
           >
-            {state.isAuthenticated && role === "admin" ? "Manage" : "View Details"}
+            {isAdmin ? "Manage" : "View Details"}
           </button>
 
           {isAdmin && (
@@ -99,5 +96,4 @@ function Card({ experience, onDelete }: Props) {
   );
 }
 
-export default Card;
-
+export default React.memo(Card);

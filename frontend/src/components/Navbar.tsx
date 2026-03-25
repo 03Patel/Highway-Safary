@@ -1,8 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../reducers/AuthContext";
-import { LogOut } from "lucide-react";
-import { div } from "framer-motion/client";
 
 function Navbar() {
   const { state, dispatch } = useContext(AuthContext);
@@ -10,92 +8,73 @@ function Navbar() {
 
   const role = localStorage.getItem("role");
 
-  const logout = () => {
+  // ✅ memoized logout
+  const logout = useCallback(() => {
     dispatch({ type: "LOGOUT" });
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     navigate("/");
-  };
-  const navItems = (
+  }, [dispatch, navigate]);
+
+  // ✅ memoized nav items
+  const navItems = useMemo(() => (
     <>
       <li><Link to="/">Home</Link></li>
       <li><Link to="/aboutus">About Us</Link></li>
-      <li><Link to="destination">Destinations</Link></li>
-      <li><Link to="blog">Blog</Link></li>
-      <li><Link to="con">Contact</Link></li>
+      <li><Link to="/destination">Destinations</Link></li>
+      <li><Link to="/blog">Blog</Link></li>
+      <li><Link to="/con">Contact</Link></li>
+
+      {state.isAuthenticated && role === "user" && (
+        <li><Link to="/bookingdetails">My Bookings</Link></li>
+      )}
+
+      {state.isAuthenticated && role === "admin" && (
+        <li><Link to="/bookingdetails">Bookings</Link></li>
+      )}
     </>
-  )
+  ), [state.isAuthenticated, role]);
 
   const [sticky, setSticky] = useState(false);
 
+  // ✅ optimized scroll listener (throttle)
   useEffect(() => {
+    let timeout;
+
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setSticky(true);
-      } else {
-        setSticky(false);
-      }
-    }
+      if (timeout) return;
+
+      timeout = setTimeout(() => {
+        setSticky(window.scrollY > 0);
+        timeout = null;
+      }, 100); // throttle
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-
-  }, [])
-
-
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className={` max-w-screen-2xl containter mx-auto bg-white text-black sticky top-0 left-0 right-0 z-150
-     ${sticky ? "sticky-navbar shadow-md bg-base-200 duration-300 transition-all ease-in-out" : ""}
-    `}>
-      <div className="navbar md:px-20 px-4  ">
+    <div
+      className={`max-w-screen-2xl container mx-auto bg-white text-black sticky top-0 left-0 right-0 z-150
+      ${sticky ? "shadow-md bg-base-200 transition-all duration-300" : ""}`}
+    >
+      <div className="navbar md:px-20 px-4">
 
         {/* LEFT */}
         <div className="navbar-start">
 
           {/* MOBILE MENU */}
-          <div className="dropdown ">
+          <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
+              ☰
             </div>
 
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-64 p-4 shadow-xl border "
-
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box mt-3 w-64 p-4 shadow-xl border"
             >
-
               {navItems}
-
-              {state.isAuthenticated && role === "user" && (
-                <>
-                  <li><Link to="/bookingdetails">My Bookings</Link></li>
-
-                </>
-              )}
-
-              {state.isAuthenticated && role === "admin" && (
-                <>
-                  <li><Link to="/bookingdetails">Bookings</Link></li>
-
-                </>
-              )}
-
-
             </ul>
           </div>
 
@@ -108,52 +87,38 @@ function Navbar() {
           </Link>
         </div>
 
+        {/* RIGHT */}
         <div className="navbar-end">
-          {/* CENTER MENU (DESKTOP) */}
-          <div className=" hidden lg:flex ">
 
+          {/* DESKTOP MENU */}
+          <div className="hidden lg:flex">
             <ul className="menu menu-horizontal px-1">
               {navItems}
-              {state.isAuthenticated && role === "user" && (
-                <>
-                  <li><Link to="/bookingdetails">My Bookings</Link></li>
-                </>
-              )}
-
-              {state.isAuthenticated && role === "admin" && (
-                <>
-                  <li><Link to="/bookingdetails">Bookings</Link></li>
-                </>
-              )}
-
             </ul>
           </div>
 
-
+          {/* AUTH BUTTON */}
           {state.isAuthenticated ? (
             <button
               onClick={logout}
-              className=" bg-red-500 text-white p-2 rounded-md cursor-pointer hover:bg-red-700 duration-300"
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300"
             >
               Logout
             </button>
           ) : (
             <button
               onClick={() => navigate("/signin")}
-              className=" bg-black text-white p-2 rounded-md cursor-pointer hover:bg-slate-800 duration-300"
+              className="bg-black text-white px-4 py-2 rounded-md hover:bg-slate-800 transition duration-300"
             >
               Login
             </button>
-          )
-          }
+          )}
+
         </div>
-
-
-
 
       </div>
     </div>
   );
 }
 
-export default Navbar;
+export default React.memo(Navbar);

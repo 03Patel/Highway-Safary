@@ -1,23 +1,31 @@
-import React from 'react'
-import image from "../assets/image.png"
-import Footer from "./Footer"
-import AboutSection from './AboutSectioin'
-import Reviews from '../pages/Reviews'
-import TopTour from '../pages/TopTour'
-import TravelHero from './MobileFrame'
-//import TravelHeroAnimation from './TravelHeroAnimation'
+import React, { lazy, Suspense, useCallback } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
+// Lazy load components
+const Footer = lazy(() => import("./Footer"))
+const AboutSection = lazy(() => import('./AboutSectioin'))
+const Reviews = lazy(() => import('../pages/Reviews'))
+const TopTour = lazy(() => import('../pages/TopTour'))
+const TravelHero = lazy(() => import('./MobileFrame'))
 
 function Banner() {
+
+
+    const navigate = useNavigate()
+
+
+    // ✅ useCallback to prevent re-creation on every render
+    const handleClick = useCallback(() => {
+        console.log("click")
+    }, [])
+
     return (
         <>
-            <div className='max-w-screen-2xl h-screen container mx-auto md:px-20 px-4 flex flex-col md:flex-row bg-pink-50'>
-                <div>
-                    <p></p>
-                </div>
+            {/* HERO SECTION */}
+            <div className='max-w-screen-2xl min-h-screen container mx-auto md:px-20 px-4 flex flex-col md:flex-row bg-pink-50'>
+
                 {/* LEFT CONTENT */}
                 <div className='w-full md:w-1/2 mt-12 md:mt-20 order-1 flex justify-center md:justify-start'>
-
                     <div className='space-y-12 text-center md:text-left'>
                         <div className="space-y-6 max-w-xl mx-auto md:mx-0">
 
@@ -30,20 +38,25 @@ function Banner() {
                             </h1>
 
                             <p className="text-sm md:text-lg text-gray-700">
-                                Explore breathtaking destinations, unforgettable experiences, and
-                                exciting journeys waiting just for you. Start your adventure and
-                                create memories that last a lifetime.
+                                Explore breathtaking destinations, unforgettable experiences, and exciting journeys waiting just for you. Start your adventure and create memories that last a lifetime.
                             </p>
 
                             {/* BUTTONS */}
                             <div className="flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
-                                <button className="btn btn-primary w-auto md:w-auto">
+
+                                {/* ✅ No extra button inside Link */}
+                                <Link
+                                    to="/destination"
+                                    onClick={() => navigate("/destination")}
+                                    className="btn btn-primary"
+                                >
                                     Explore Tours
+                                </Link>
+
+                                <button onClick={() => navigate("/signup")} className="btn btn-outline hidden md:block btn-primary">
+                                    Get Started
                                 </button>
 
-                                <button className="btn btn-outline hidden md:block btn-primary w-full sm:w-auto">
-                                    Learn More
-                                </button>
                             </div>
 
                         </div>
@@ -52,19 +65,31 @@ function Banner() {
 
                 {/* RIGHT CONTENT */}
                 <div className="w-full mt-[-40px] md:mt-[-30px] order-2 md:w-1/2 flex justify-center items-center overflow-hidden">
-                    <TravelHero />
+                    <Suspense fallback={<div className="h-[300px] flex items-center justify-center">Loading...</div>}>
+                        <TravelHero />
+                    </Suspense>
                 </div>
 
             </div>
 
-            <AboutSection />
-            <TopTour />
-            <Reviews />
+            {/* BELOW SECTIONS (Better split loading) */}
+            <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
+                <AboutSection />
+            </Suspense>
 
-            <Footer />
+            <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
+                <TopTour />
+            </Suspense>
+
+            <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
+                <Reviews />
+            </Suspense>
+
+            <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
+                <Footer />
+            </Suspense>
         </>
-
     )
 }
 
-export default Banner
+export default React.memo(Banner)

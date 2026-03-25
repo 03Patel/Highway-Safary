@@ -1,193 +1,189 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 
-interface TimeSlot {
-    time: string;
-    capacity: number;
-    booked: number;
-}
-
-interface Slot {
-    date: string;
-    times: TimeSlot[];
-}
-
-interface Experience {
-    _id?: string;
-    title: string;
-    slug: string;
-    location: string;
-    price: number;
-    duration: string;
-    description: string;
-    image: string;
-    slots: Slot[];
-}
-
 function AdminPage() {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams();
     const navigate = useNavigate();
 
-    const [experience, setExperience] = useState<Experience | null>(null);
+    const [experience, setExperience] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         if (!id) return;
 
-        API.get(`/experiences/${id}`)
-            .then((res) => setExperience(res.data))
-            .catch((err) => console.error(err))
-            .finally(() => setLoading(false));
+        const fetchData = async () => {
+            try {
+                const res = await API.get(`/experiences/${id}`);
+                setExperience(res.data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, [id]);
 
-    if (loading)
-        return <div className="text-center py-20 text-lg">Loading...</div>;
+    // ✅ optimized generic handler
+    const handleChange = useCallback((field, value) => {
+        setExperience((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    }, []);
 
-    if (!experience)
-        return <div className="text-center py-20 text-lg">Not Found</div>;
+    // ✅ safe nested update (slots)
+    const updateSlot = (slotIndex, field, value) => {
+        setExperience((prev) => {
+            const updatedSlots = [...prev.slots];
+            updatedSlots[slotIndex] = {
+                ...updatedSlots[slotIndex],
+                [field]: value,
+            };
+            return { ...prev, slots: updatedSlots };
+        });
+    };
 
-    const handleChange = (field: keyof Experience, value: any) => {
-        setExperience({ ...experience, [field]: value });
+    const updateTime = (slotIndex, timeIndex, field, value) => {
+        setExperience((prev) => {
+            const updatedSlots = [...prev.slots];
+            const updatedTimes = [...updatedSlots[slotIndex].times];
+
+            updatedTimes[timeIndex] = {
+                ...updatedTimes[timeIndex],
+                [field]: value,
+            };
+
+            updatedSlots[slotIndex].times = updatedTimes;
+
+            return { ...prev, slots: updatedSlots };
+        });
     };
 
     const handleSave = async () => {
-        await API.put(`/experiences/${experience._id}`, experience);
-        alert("Experience Updated Successfully");
-        navigate("/");
+        if (!experience?._id) return;
+
+        setSaving(true);
+
+        try {
+            await API.put(`/experiences/${experience._id}`, experience);
+            alert("Experience Updated Successfully");
+            navigate("/");
+        } catch (err) {
+            alert("Update failed");
+        } finally {
+            setSaving(false);
+        }
     };
+
+    if (loading) {
+        return <div className="text-center py-20 text-lg">Loading...</div>;
+    }
+
+    if (!experience) {
+        return <div className="text-center py-20 text-lg">Not Found</div>;
+    }
 
     return (
         <div className="min-h-screen bg-white text-gray-800 py-10">
 
-            {/* PAGE HEADER */}
             <div className="max-w-7xl mx-auto px-4 mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">
-                    Edit Experience
-                </h1>
-                <p className="text-gray-500">
-                    Update experience details, slots and pricing
-                </p>
+                <h1 className="text-3xl font-bold">Edit Experience</h1>
+                <p className="text-gray-500">Update experience details</p>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-10">
 
-                {/* LEFT SIDE */}
+                {/* LEFT */}
                 <div className="lg:col-span-2 space-y-8">
 
-                    {/* BASIC INFO */}
+                    {/* BASIC */}
                     <div className="bg-white p-6 rounded-xl shadow">
-                        <h2 className="text-lg font-semibold mb-4 text-gray-700">
-                            Basic Information
-                        </h2>
+                        <h2 className="text-lg font-semibold mb-4">Basic Info</h2>
 
-                        <div className="space-y-4">
+                        <input
+                            value={experience.title}
+                            onChange={(e) => handleChange("title", e.target.value)}
+                            className="w-full border p-2 mb-3"
+                        />
 
-                            <div>
-                                <label className="text-sm text-gray-500">Title</label>
-                                <input
-                                    value={experience.title}
-                                    onChange={(e) => handleChange("title", e.target.value)}
-                                    className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-yellow-400 outline-none"
-                                />
-                            </div>
+                        <input
+                            value={experience.location}
+                            onChange={(e) => handleChange("location", e.target.value)}
+                            className="w-full border p-2 mb-3"
+                        />
 
-                            <div>
-                                <label className="text-sm text-gray-500">Location</label>
-                                <input
-                                    value={experience.location}
-                                    onChange={(e) => handleChange("location", e.target.value)}
-                                    className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-yellow-400 outline-none"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="text-sm text-gray-500">Description</label>
-                                <textarea
-                                    rows={4}
-                                    value={experience.description}
-                                    onChange={(e) => handleChange("description", e.target.value)}
-                                    className="w-full border rounded-lg p-2 mt-1 focus:ring-2 focus:ring-yellow-400 outline-none"
-                                />
-                            </div>
-
-                        </div>
+                        <textarea
+                            value={experience.description}
+                            onChange={(e) => handleChange("description", e.target.value)}
+                            className="w-full border p-2"
+                        />
                     </div>
 
                     {/* IMAGE */}
                     <div className="bg-white p-6 rounded-xl shadow">
-                        <h2 className="text-lg font-semibold mb-4 text-gray-700">
-                            Experience Image
-                        </h2>
-
                         <input
                             value={experience.image}
                             onChange={(e) => handleChange("image", e.target.value)}
-                            className="w-full border rounded-lg p-2 mb-4 focus:ring-2 focus:ring-yellow-400 outline-none"
-                            placeholder="Image URL"
+                            className="w-full border p-2 mb-4"
                         />
 
                         <img
                             src={experience.image}
-                            className="w-full h-80 object-cover rounded-lg shadow"
+                            alt="preview"
+                            loading="lazy"   // ✅ optimization
+                            className="w-full h-80 object-cover rounded-lg"
                         />
                     </div>
 
                     {/* SLOTS */}
                     <div className="bg-white p-6 rounded-xl shadow">
-                        <h2 className="text-lg font-semibold mb-4 text-gray-700">
+                        <h2 className="text-lg font-semibold mb-4">
                             Slot Management
                         </h2>
 
                         {experience.slots.map((slot, slotIndex) => (
-                            <div
-                                key={slotIndex}
-                                className="border rounded-lg p-4 mb-4 bg-gray-50"
-                            >
-
-                                <label className="text-sm text-gray-500">
-                                    Date
-                                </label>
+                            <div key={slotIndex} className="border p-4 mb-4">
 
                                 <input
                                     value={slot.date}
-                                    onChange={(e) => {
-                                        const updated = [...experience.slots];
-                                        updated[slotIndex].date = e.target.value;
-                                        handleChange("slots", updated);
-                                    }}
-                                    className="border rounded-lg p-2 w-full mt-1 mb-4"
+                                    onChange={(e) =>
+                                        updateSlot(slotIndex, "date", e.target.value)
+                                    }
+                                    className="border p-2 w-full mb-3"
                                 />
 
                                 {slot.times.map((time, timeIndex) => (
-                                    <div
-                                        key={timeIndex}
-                                        className="flex gap-3 mb-3"
-                                    >
+                                    <div key={timeIndex} className="flex gap-2 mb-2">
 
                                         <input
                                             value={time.time}
-                                            placeholder="Time"
-                                            onChange={(e) => {
-                                                const updated = [...experience.slots];
-                                                updated[slotIndex].times[timeIndex].time =
-                                                    e.target.value;
-                                                handleChange("slots", updated);
-                                            }}
-                                            className="border p-2 rounded-lg w-40"
+                                            onChange={(e) =>
+                                                updateTime(
+                                                    slotIndex,
+                                                    timeIndex,
+                                                    "time",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="border p-2"
                                         />
 
                                         <input
                                             type="number"
                                             value={time.capacity}
-                                            placeholder="Capacity"
-                                            onChange={(e) => {
-                                                const updated = [...experience.slots];
-                                                updated[slotIndex].times[timeIndex].capacity =
-                                                    Number(e.target.value);
-                                                handleChange("slots", updated);
-                                            }}
-                                            className="border p-2 rounded-lg w-32"
+                                            onChange={(e) =>
+                                                updateTime(
+                                                    slotIndex,
+                                                    timeIndex,
+                                                    "capacity",
+                                                    Number(e.target.value)
+                                                )
+                                            }
+                                            className="border p-2"
                                         />
 
                                     </div>
@@ -198,45 +194,32 @@ function AdminPage() {
 
                 </div>
 
-                {/* RIGHT PANEL */}
-                <div className="bg-white rounded-xl shadow p-6 h-fit sticky top-24">
+                {/* RIGHT */}
+                <div className="bg-white p-6 rounded-xl shadow h-fit sticky top-24">
 
-                    <h2 className="text-lg font-semibold mb-6 text-gray-700">
-                        Pricing & Duration
-                    </h2>
+                    <input
+                        type="number"
+                        value={experience.price}
+                        onChange={(e) =>
+                            handleChange("price", Number(e.target.value))
+                        }
+                        className="w-full border p-2 mb-3"
+                    />
 
-                    <div className="space-y-4">
-
-                        <div>
-                            <label className="text-sm text-gray-500">Price</label>
-                            <input
-                                type="number"
-                                value={experience.price}
-                                onChange={(e) =>
-                                    handleChange("price", Number(e.target.value))
-                                }
-                                className="w-full border rounded-lg p-2 mt-1"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="text-sm text-gray-500">Duration</label>
-                            <input
-                                value={experience.duration}
-                                onChange={(e) =>
-                                    handleChange("duration", e.target.value)
-                                }
-                                className="w-full border rounded-lg p-2 mt-1"
-                            />
-                        </div>
-
-                    </div>
+                    <input
+                        value={experience.duration}
+                        onChange={(e) =>
+                            handleChange("duration", e.target.value)
+                        }
+                        className="w-full border p-2 mb-3"
+                    />
 
                     <button
                         onClick={handleSave}
-                        className="w-full mt-6 py-3 bg-yellow-400 hover:bg-yellow-500 transition font-semibold rounded-lg shadow"
+                        disabled={saving}
+                        className="w-full py-3 bg-yellow-400 rounded-lg"
                     >
-                        Save Changes
+                        {saving ? "Saving..." : "Save Changes"}
                     </button>
 
                 </div>
@@ -246,4 +229,4 @@ function AdminPage() {
     );
 }
 
-export default AdminPage;
+export default React.memo(AdminPage);

@@ -16,7 +16,10 @@ function TopTour() {
             const res = await API.get("/tours");
             setTours(res.data);
         } catch (err) {
-            console.log(err);
+            // ✅ avoid console in production
+            if (process.env.NODE_ENV === "development") {
+                console.log(err);
+            }
         }
     };
 
@@ -30,8 +33,9 @@ function TopTour() {
             {/* Background */}
             <img
                 src={background}
+                loading="lazy"  // ✅ lazy load background
                 className="absolute inset-0 w-full h-full object-cover"
-                alt=""
+                alt="background"
             />
             <div className="absolute inset-0 bg-black/60"></div>
 
@@ -46,28 +50,31 @@ function TopTour() {
                 <Swiper
                     modules={[Autoplay]}
                     spaceBetween={16}
+                    loop={tours.length > 3}
+                    speed={800} // ✅ smoother animation
                     autoplay={{
-                        delay: 2500,
+                        delay: 3500, // ✅ reduced frequency
                         disableOnInteraction: false,
                     }}
                     breakpoints={{
-                        0: { slidesPerView: 1 },   // 👈 mobile peek
+                        0: { slidesPerView: 1 },
                         640: { slidesPerView: 1 },
                         768: { slidesPerView: 2 },
                         1024: { slidesPerView: 3 }
                     }}
                 >
 
-                    {tours.map((tour: any) => (
+                    {tours.map((tour) => (
                         <SwiperSlide key={tour._id}>
 
-                            <div className="bg-white/95 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500">
+                            <div className="bg-white/95 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300">
 
                                 {/* Image */}
                                 <div className="relative group">
                                     <img
                                         src={tour.image}
-                                        className="w-full h-48 sm:h-56 object-cover group-hover:scale-110 transition duration-500"
+                                        loading="lazy"  // ✅ lazy load images
+                                        className="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition duration-300"
                                         alt={tour.name}
                                     />
 
@@ -93,8 +100,6 @@ function TopTour() {
                                         ⭐ {tour.rating}
                                     </p>
 
-
-
                                 </div>
 
                             </div>
@@ -109,4 +114,4 @@ function TopTour() {
     );
 }
 
-export default TopTour;
+export default React.memo(TopTour);

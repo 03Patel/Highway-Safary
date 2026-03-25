@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useMemo } from "react";
+import React, { useEffect, useState, useContext, useMemo, useCallback } from "react";
 import API from "../api/axios";
 import Card from "../components/Card";
 import { AuthContext } from "../reducers/AuthContext";
@@ -10,13 +10,13 @@ import Heading from "../components/Heading";
 import TopTour from "./TopTour";
 import Reviews from "./Reviews";
 
-// Debounce hook to improve search performance
+// Debounce Hook
 function useDebounce(value: string, delay = 300) {
   const [debounced, setDebounced] = useState(value);
 
   useEffect(() => {
-    const handler = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(handler);
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
   }, [value, delay]);
 
   return debounced;
@@ -24,115 +24,139 @@ function useDebounce(value: string, delay = 300) {
 
 function Home() {
   const { state } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [list, setList] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+
   const role = localStorage.getItem("role");
 
   // Debounced search
-  const debouncedSearch = useDebounce(search, 300);
+  const debouncedSearch = useDebounce(search);
 
-  // Fetch experiences from API
+  // Fetch data (optimized)
   useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
         const res = await API.get("/experiences");
-        setList(res.data);
+        if (isMounted) setList(res.data);
       } catch (err) {
-        console.error("Error fetching:", err);
+        console.error("Fetch error:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
+
     fetchData();
+
+    return () => {
+      isMounted = false; // prevents memory leak
+    };
   }, []);
 
-  // Memoized filtered list
-  const filtered = useMemo(() => {
-    if (!debouncedSearch) return list;
+  // Optimized filtering
+  const filteredList = useMemo(() => {
+    if (!debouncedSearch.trim()) return list;
+
+    const lowerSearch = debouncedSearch.toLowerCase();
+
     return list.filter((item) =>
-      item.title.toLowerCase().includes(debouncedSearch.toLowerCase())
+      item.title.toLowerCase().includes(lowerSearch)
     );
   }, [debouncedSearch, list]);
 
-  // Delete experience
-  const handleDelete = (id: string) => {
+  // Optimized delete (prevents re-renders)
+  const handleDelete = useCallback((id: string) => {
     setList((prev) => prev.filter((item) => item._id !== id));
-  };
+  }, []);
 
   return (
     <div className="bg-gray-100 min-h-screen py-10">
-      {/* Heading */}
+
+      {/* HERO */}
       <Heading
         h="Explore the World"
         p="Discover amazing places, unique experiences, and unforgettable journeys."
       />
 
       <div className="max-w-6xl mx-auto px-6">
-        {/* Top Destinations Header */}
+
+        {/* TITLE */}
         <div className="text-center py-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
             Top Destinations
           </h2>
-          <p className="text-gray-600 text-sm md:text-lg max-w-4xl mx-auto">
-            We’ve helped countless explorers experience the beauty of the world through
-            carefully curated journeys. Whether it’s a one-day escape or a two-week adventure,
-            our mission is to turn every trip into a story worth remembering.
+          <p className="text-gray-600 mt-3 text-sm md:text-lg max-w-4xl mx-auto">
+            Explore curated travel experiences designed to create unforgettable memories.
           </p>
         </div>
 
-        {/* Search Input */}
+        {/* SEARCH */}
         <div className="flex justify-center mb-8">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search experiences..."
-            className="border border-gray-300 rounded-lg p-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="border border-gray-300 rounded-lg p-2 w-full max-w-md focus:ring-2 focus:ring-indigo-500 outline-none"
           />
         </div>
 
-        {/* Experience Cards */}
+        {/* LOADING SKELETON */}
         {loading ? (
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-60 bg-gray-200 rounded-xl shadow transition-all duration-300"
-              ></div>
+                className="h-60 bg-gray-200 rounded-xl animate-pulse"
+              />
             ))}
           </div>
-        ) : filtered.length > 0 ? (
+        ) : filteredList.length > 0 ? (
+
+          /* CARD GRID */
           <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((x) => (
-              <Card key={x._id} experience={x} onDelete={handleDelete} />
+
+            {filteredList.map((item) => (
+              <Card
+                key={item._id}
+                experience={item}
+                onDelete={handleDelete}
+              />
             ))}
 
-            {/* Admin Add Experience Card */}
+            {/* ADMIN ADD CARD */}
             {state.isAuthenticated && role === "admin" && (
               <div
                 onClick={() => navigate("/AddItem")}
-                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl h-60 cursor-pointer hover:bg-white hover:shadow-lg transition-all duration-300"
+                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl h-60 cursor-pointer hover:bg-white hover:shadow-lg transition"
               >
                 <Plus size={40} className="text-indigo-500 mb-2" />
                 <p className="text-gray-600 font-medium">Add Experience</p>
               </div>
             )}
+
           </div>
+
         ) : (
+
+          /* EMPTY STATE */
           <div className="text-center mt-16">
             <h3 className="text-xl font-semibold text-gray-600">
               No experiences found
             </h3>
             <p className="text-gray-400 mt-2">
-              Try searching with different keywords
+              Try different keywords
             </p>
           </div>
+
         )}
       </div>
 
-      {/* Additional Sections */}
+      {/* EXTRA SECTIONS */}
       <TopTour />
       <Reviews />
       <Footer />
@@ -140,4 +164,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default React.memo(Home);

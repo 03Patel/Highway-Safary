@@ -1,33 +1,21 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import API from "../api/axios";
 import { AuthContext } from "../reducers/AuthContext";
 import { Trash2, Save } from "lucide-react";
 
-type Booking = {
-    _id: string;
-    refId: string;
-    name: string;
-    status: string;
-    image?: string;
-    title?: string;
-    date?: string;
-    time?: string;
-};
-
 function BookingList() {
-    const [bookings, setBookings] = useState<Booking[]>([]);
-
-    const [updatedStatus, setUpdatedStatus] = useState<{ [key: string]: string }>({});
+    const [bookings, setBookings] = useState([]);
+    const [updatedStatus, setUpdatedStatus] = useState({});
 
     const { state } = useContext(AuthContext);
-    const role = localStorage.getItem("role"); // ✅ user / admin
+    const role = localStorage.getItem("role");
 
-    const fetchBookings = async () => {
+    // ✅ memoized function (prevents recreation)
+    const fetchBookings = useCallback(async () => {
         try {
             if (role === "admin") {
                 const res = await API.get("/bookings");
                 setBookings(res.data.bookings);
-
             } else {
                 const userId = localStorage.getItem("userId");
                 if (!userId) return;
@@ -36,31 +24,40 @@ function BookingList() {
                 setBookings(res.data);
             }
         } catch (err) {
-            console.log("ERROR:", err);
+            if (process.env.NODE_ENV === "development") {
+                console.log("ERROR:", err);
+            }
         }
-    };
+    }, [role]);
 
     useEffect(() => {
         fetchBookings();
-    }, []);
+    }, [fetchBookings]);
 
-    const handleStatusChange = (id: string, status: string) => {
-        setUpdatedStatus({ ...updatedStatus, [id]: status });
+    // ✅ better state update
+    const handleStatusChange = (id, status) => {
+        setUpdatedStatus((prev) => ({ ...prev, [id]: status }));
     };
 
-    const saveStatus = async (id: string) => {
-        await API.put(`/bookings/update-status/${id}`, {
-            status: updatedStatus[id],
-        });
-        fetchBookings();
+    const saveStatus = async (id) => {
+        try {
+            await API.put(`/bookings/update-status/${id}`, {
+                status: updatedStatus[id],
+            });
+            fetchBookings();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const deleteBooking = async (id: string) => {
-        await API.delete(`/bookings/${id}`);
-        fetchBookings();
+    const deleteBooking = async (id) => {
+        try {
+            await API.delete(`/bookings/${id}`);
+            fetchBookings();
+        } catch (err) {
+            console.log(err);
+        }
     };
-
-
 
     return (
         <div className="min-h-screen bg-white text-gray-800 p-6">
@@ -77,13 +74,14 @@ function BookingList() {
                     {bookings.map((b) => (
                         <div
                             key={b._id}
-                            className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
+                            className="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden"
                         >
 
                             {/* Image */}
                             <img
                                 src={b.image}
-                                alt=""
+                                loading="lazy" // ✅ lazy load
+                                alt={b.name}
                                 className="w-full h-40 object-cover"
                             />
 
@@ -96,24 +94,18 @@ function BookingList() {
                                     Ref ID: {b.refId}
                                 </p>
 
+                                <p className="text-sm text-gray-500">
+                                    Title: {b.title}
+                                </p>
 
+                                <p className="text-sm text-gray-500">
+                                    Date: {b.date} <br />
+                                    Time: {b.time}
+                                </p>
 
-                                <>
-                                    <p className="text-sm text-gray-500">
-                                        Title: {b.title}
-                                    </p>
-
-                                    <p className="text-sm text-gray-500">
-                                        Date: {b.date} <br />
-                                        Time: {b.time}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Slote: {b.seats} <br />
-
-                                    </p>
-
-                                </>
-
+                                <p className="text-sm text-gray-500">
+                                    Slot: {b.seats}
+                                </p>
 
                                 {/* STATUS */}
                                 {role === "admin" ? (
@@ -129,7 +121,7 @@ function BookingList() {
                                         <option value="cancelled">Cancelled</option>
                                     </select>
                                 ) : (
-                                    <p className="mt-2  text-sm">
+                                    <p className="mt-2 text-sm">
                                         Status:
                                         <span className="ml-2 px-2 py-1 bg-gray-100 rounded">
                                             {b.status}
@@ -170,4 +162,4 @@ function BookingList() {
     );
 }
 
-export default BookingList;
+export default React.memo(BookingList);

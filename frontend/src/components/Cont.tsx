@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
+import React, { useState, useCallback } from "react";
 import Footer from "./Footer";
 import Heading from "./Heading";
 
-
-
-const Cont: React.FC = () => {
+function Cont() {
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -14,25 +11,51 @@ const Cont: React.FC = () => {
         message: "",
     });
 
-    const handleChange = (e: any) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: any) => {
+    // ✅ optimized change handler
+    const handleChange = useCallback((e: any) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    }, []);
+
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
+        setLoading(true);
 
-        alert("Message Sent ✅");
+        try {
+            // 👉 here you can call API later
+            // await API.post("/contact", form);
+
+            alert("Message Sent ✅");
+
+            // ✅ reset form
+            setForm({
+                name: "",
+                email: "",
+                phone: "",
+                subject: "",
+                message: "",
+            });
+
+        } catch (err) {
+            alert("Something went wrong ❌");
+        } finally {
+            setLoading(false);
+        }
     };
-
 
     return (
-        <div >
-            <Heading h=" Get in Touch" p=" Have questions or need help planning your journey? Our team is here to guide you every step of the way." />
+        <div>
+            <Heading
+                h="Get in Touch"
+                p="Have questions or need help planning your journey? Our team is here to guide you every step of the way."
+            />
 
-            <div className="bg-white  md:px-20 px-6">
+            <div className="bg-white md:px-20 px-6">
 
                 {/* Heading */}
-                <div className="text-center py-16 ">
+                <div className="text-center py-16">
                     <h1 className="text-3xl md:text-5xl font-bold text-gray-900">
                         How Can We Help You ?
                     </h1>
@@ -40,7 +63,8 @@ const Cont: React.FC = () => {
                         Have questions or need help planning your trip? We’re here for you.
                     </p>
                 </div>
-                <div className="bg-blue-50 w-full md:w-[80%] md:mx-auto px-3 sm:px-5 md:px-16 py-6 md:py-10 ">
+
+                <div className="bg-blue-50 w-full md:w-[80%] md:mx-auto px-3 sm:px-5 md:px-16 py-6 md:py-10">
 
                     <form
                         onSubmit={handleSubmit}
@@ -49,7 +73,7 @@ const Cont: React.FC = () => {
 
                         {/* Name */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                            <label className="text-gray-700 mb-1 font-medium">
                                 Your Name *
                             </label>
                             <input
@@ -58,14 +82,14 @@ const Cont: React.FC = () => {
                                 value={form.name}
                                 onChange={handleChange}
                                 placeholder="Enter your name"
-                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
+                                className="input-style"
                                 required
                             />
                         </div>
 
                         {/* Email */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                            <label className="text-gray-700 mb-1 font-medium">
                                 Your Email *
                             </label>
                             <input
@@ -74,14 +98,14 @@ const Cont: React.FC = () => {
                                 value={form.email}
                                 onChange={handleChange}
                                 placeholder="Enter your email"
-                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
+                                className="input-style"
                                 required
                             />
                         </div>
 
                         {/* Phone */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                            <label className="text-gray-700 mb-1 font-medium">
                                 Phone
                             </label>
                             <input
@@ -90,13 +114,13 @@ const Cont: React.FC = () => {
                                 value={form.phone}
                                 onChange={handleChange}
                                 placeholder="Enter phone number"
-                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
+                                className="input-style"
                             />
                         </div>
 
                         {/* Subject */}
                         <div className="flex flex-col">
-                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                            <label className="text-gray-700 mb-1 font-medium">
                                 Subject
                             </label>
                             <input
@@ -105,13 +129,13 @@ const Cont: React.FC = () => {
                                 value={form.subject}
                                 onChange={handleChange}
                                 placeholder="Enter subject"
-                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black"
+                                className="input-style"
                             />
                         </div>
 
                         {/* Message */}
                         <div className="md:col-span-2 flex flex-col">
-                            <label className="text-gray-700 mb-1 text-sm md:text-base font-medium">
+                            <label className="text-gray-700 mb-1 font-medium">
                                 Your Message *
                             </label>
                             <textarea
@@ -120,7 +144,7 @@ const Cont: React.FC = () => {
                                 onChange={handleChange}
                                 placeholder="Write your message..."
                                 rows={4}
-                                className="w-full border border-gray-300 p-3 text-sm md:text-base rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-black resize-none"
+                                className="input-style resize-none"
                                 required
                             />
                         </div>
@@ -128,23 +152,26 @@ const Cont: React.FC = () => {
                         {/* Button */}
                         <button
                             type="submit"
-                            className="md:col-span-2 w-full bg-indigo-500 text-white py-3 rounded-lg text-sm md:text-base font-semibold hover:bg-indigo-600 transition duration-300 shadow-md"
+                            disabled={loading}
+                            className="md:col-span-2 w-full bg-indigo-500 text-white py-3 rounded-lg font-semibold hover:bg-indigo-600 transition duration-300 shadow-md disabled:opacity-50"
                         >
-                            Send Message
+                            {loading ? "Sending..." : "Send Message"}
                         </button>
 
                     </form>
                 </div>
-                <br />
 
-
-
+                {/* Map */}
                 <div className="mt-20">
-                    <h1 className="text-center  text-black text-3xl md:text-4xl font-bold ">Find Our Office on Map</h1>
-                    <p className="text-center text-sm md:text-base text-gray-400 mt-4">Contact us and get strapped in for a better adventure experience in your life-time. Just look for opportunity to be with nature.</p>
+                    <h1 className="text-center text-black text-3xl md:text-4xl font-bold">
+                        Find Our Office on Map
+                    </h1>
 
-                    <div className="max-w-6xl  mt-10 mx-auto px-6 md:px-16 pb-16">
+                    <p className="text-center text-sm md:text-base text-gray-400 mt-4">
+                        Contact us and get strapped in for a better adventure experience in your life-time.
+                    </p>
 
+                    <div className="max-w-6xl mt-10 mx-auto px-6 md:px-16 pb-16">
                         <iframe
                             src="https://www.google.com/maps?q=Delhi&output=embed"
                             className="w-full h-[320px] rounded-2xl shadow-md"
@@ -152,10 +179,12 @@ const Cont: React.FC = () => {
                         ></iframe>
                     </div>
                 </div>
+
             </div>
+
             <Footer />
         </div>
     );
-};
+}
 
-export default Cont;
+export default React.memo(Cont);

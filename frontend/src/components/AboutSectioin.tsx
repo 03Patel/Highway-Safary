@@ -13,6 +13,7 @@ export default function AboutSection() {
                     <img
                         src={background}
                         alt="Background"
+                        loading="lazy"   // ✅ lazy load
                         className="w-full h-full object-cover scale-125 md:scale-150 origin-bottom"
                     />
 
@@ -20,12 +21,13 @@ export default function AboutSection() {
                     <img
                         src={gi}
                         alt="Foreground"
+                        loading="lazy"   // ✅ lazy load
                         className="absolute inset-0 w-full h-full object-contain object-left animate-float"
                     />
                 </div>
 
                 {/* Right Content */}
-                <div className="w-full md:w-1/2 order-1 md:order-1  space-y-5 text-center md:text-left">
+                <div className="w-full md:w-1/2 order-1 space-y-5 text-center md:text-left">
 
                     <p className="text-primary italic text-base md:text-lg">
                         About Highway Safary
@@ -43,11 +45,7 @@ export default function AboutSection() {
 
                     {/* Features */}
                     <div className="space-y-3 pt-2">
-                        {[
-                            "Best travel destinations",
-                            "Affordable packages",
-                            "24/7 travel support"
-                        ].map((item, i) => (
+                        {FEATURES.map((item, i) => (
                             <div key={i} className="flex items-center justify-center md:justify-start gap-3">
                                 <div className="w-6 h-6 bg-primary text-white flex items-center justify-center rounded-full">
                                     ✓
@@ -62,3 +60,10 @@ export default function AboutSection() {
         </section>
     );
 }
+
+// ✅ move outside component (prevents recreation on every render)
+const FEATURES = [
+    "Best travel destinations",
+    "Affordable packages",
+    "24/7 travel support"
+];
